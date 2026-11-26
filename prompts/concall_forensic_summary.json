@@ -1,0 +1,82 @@
+{
+  "name": "concall_forensic_summary",
+  "version": 1,
+  "description": "Forensic earnings-call extraction prompt for Gemini / research agents. Soft coverage targets; quote-grounded; Q&A focused.",
+  "prompt_template": "You are a senior institutional equity research analyst. Extract a forensic earnings-call summary ONLY from the transcript below.\n\nCompany: {{SYMBOL}} — {{NAME}}\nPeriod: {{PERIOD}}\nBusiness type (if known): {{BUSINESS_TYPE}}\nTranscript:\n---\n{{TRANSCRIPT_TEXT}}\n---\n\nCRITICAL RULES:\n1. Grounding: Use ONLY facts, numbers, and wording present in the transcript. Never invent. If missing, use \"Not stated\" or omit the item.\n2. Do NOT invent content to hit coverage targets. Prefer fewer true items over padded ones. If coverage is thin, explain in open_questions.\n3. Forensic Q&A: Scan the FULL Q&A (not only opening remarks). Capture every distinct theme where analysts pushed back, doubted guidance, or highlighted negatives.\n4. Dual metrics: If management gives both reported and adjusted/normalized figures for the same KPI, include BOTH as separate key_metrics_mentioned rows and add a risks_watch_next_quarter item on the gap.\n5. Quotes: For what_happened, outlook_guidance, risks_watch_next_quarter, analyst_pushback, and key_metrics_mentioned, include an exact verbatim transcript substring. Prefer <=25 words; if impossible, use the shortest exact span <=40 words. Never paraphrase quotes.\n6. Judgment fields (mgmt_sentiment, analyst_tone, result_quality_hint, sentiment_why) must be clearly inferred from stated facts/tone in the transcript; if evidence is weak, use \"Not stated\".\n7. Output VALID JSON ONLY. Escape internal quotes. No markdown fences, no preamble, no trailing text.\n\nCOVERAGE TARGETS (soft — do not fabricate):\n- key_takeaways: EXACTLY 5 strings; the 5th MUST start with \"Watch next: \".\n- what_happened: include every material topic present; aim for >=6 when supported; if fewer, keep only real items and note the shortfall in open_questions.\n- risks_watch_next_quarter: include every distinct risk/negative trend stated; aim for >=3 when supported; if fewer, keep only real risks.\n- analyst_pushback: one object per distinct Q&A theme. If no Q&A section exists, return [] and note that in open_questions.\n- outlook_guidance: only checkable commitments (number/%/range + timeline). Skip vague optimism. Include condition_or_caveat when stated.\n\nTOPIC GUIDANCE BY BUSINESS (pick relevant topics; do not force retail-only labels):\n- Consumer/Retail: SSSG/volume-value, margins, store expansion, inventory, competition\n- BFSI: credit growth, NIM/NII, asset quality/slippages, deposits, capital\n- IT/Services: revenue growth/cc, TCV/deals, utilization/attrition, margins, guidance\n- Industrial/Manufacturing: order book/book-to-bill, utilization, RM costs, exports, capex\n- Infra/Power/Capex-heavy: capacity/COD, utilization/PLF, capex plan, receivables, leverage\n- Pharma/Chem: launches, plant/regulatory, RM, geo mix, margins\n- Other: use the closest topics or \"Other\"\n\nReturn JSON matching target_output_schema.",
+  "target_output_schema": {
+    "company": "{{SYMBOL}} — {{NAME}}",
+    "period": "{{PERIOD}}",
+    "business_type": "Consumer|BFSI|IT|Industrial|InfraPower|PharmaChem|Other|Not stated",
+    "mgmt_sentiment": "Bullish|Optimistic|Neutral|Cautious|Bearish|Not stated",
+    "analyst_tone": "Supportive|Neutral|Skeptical|Challenging|Not stated",
+    "sentiment_why": "1-2 sentences contrasting management tone vs analyst tone, grounded in the call.",
+    "result_quality_hint": "Excellent|Strong|Average|Weak|Poor|Not stated",
+    "key_takeaways": [
+      "Bullet 1: Headline revenue & profit performance",
+      "Bullet 2: Core operating KPI trend for this business type",
+      "Bullet 3: Balance sheet, cash flow, or capex/expansion update",
+      "Bullet 4: Biggest analyst skepticism or operational headwind",
+      "Watch next: Specific make-or-break metric and checkpoint for next quarter"
+    ],
+    "what_happened": [
+      {
+        "topic": "Revenue/Demand|Unit Economics|Margins|Orders/Backlog|Credit/Asset Quality|NIM/NII|TCV/Deals|Utilization/People|Store Expansion/Capex|Capacity/COD|Working Capital/Debt|Competition|Regulatory|Other",
+        "point": "Factual summary with exact numbers and YoY/QoQ comparisons when stated.",
+        "quote": "Exact verbatim transcript substring (<=25 words preferred, <=40 max)"
+      }
+    ],
+    "outlook_guidance": [
+      {
+        "commitment": "Specific operational or financial target",
+        "metric_or_range": "Exact number, %, or range",
+        "timeline": "Specific quarter or fiscal year",
+        "condition_or_caveat": "Any stated condition, or None",
+        "quote": "Exact verbatim transcript substring (<=25 words preferred, <=40 max)",
+        "checkable": true
+      }
+    ],
+    "risks_watch_next_quarter": [
+      {
+        "category": "Demand|Margins/Costs|Balance Sheet/Working Capital|Execution/Expansion|Competition|Asset Quality|People/Utilization|Regulatory|Other",
+        "item": "Detailed explanation of the risk or negative metric trend",
+        "severity": "High|Medium|Low",
+        "quote": "Exact verbatim transcript substring (<=25 words preferred, <=40 max)"
+      }
+    ],
+    "analyst_pushback": [
+      {
+        "topic": "Specific issue raised in Q&A",
+        "analyst_concern": "What the analyst questioned or doubted",
+        "mgmt_response": "How management answered",
+        "management_answer_quality": "Clear|Vague|Defensive|Not answered",
+        "quote": "Exact verbatim transcript substring (<=25 words preferred, <=40 max)"
+      }
+    ],
+    "key_metrics_mentioned": [
+      {
+        "metric": "Metric name (listed reported and adjusted versions separately when both exist)",
+        "value": "Exact figure",
+        "context": "YoY/QoQ/benchmark context if stated",
+        "basis": "Reported|Adjusted|Normalized|Not stated",
+        "quote": "Exact verbatim transcript substring (<=25 words preferred, <=40 max)"
+      }
+    ],
+    "open_questions": [
+      "Unresolved questions, evaded answers, truncated transcript, or why coverage targets could not be met without inventing."
+    ]
+  },
+  "validation_checklist": [
+    "Reject/repair any item whose quote is not an exact substring of the transcript.",
+    "Delete outlook_guidance rows lacking a number/%/range or timeline.",
+    "If reported and adjusted versions of the same KPI appear, both must exist in key_metrics_mentioned.",
+    "If analyst_pushback is empty, open_questions must state whether Q&A was missing or empty.",
+    "key_takeaways length must be exactly 5 and item[4] must start with 'Watch next: '."
+  ],
+  "placeholders": {
+    "SYMBOL": "NSE symbol, e.g. PERSISTENT",
+    "NAME": "Company name",
+    "PERIOD": "e.g. Q2FY26 or May 2026",
+    "BUSINESS_TYPE": "Consumer|BFSI|IT|Industrial|InfraPower|PharmaChem|Other|Not stated",
+    "TRANSCRIPT_TEXT": "Full cleaned earnings-call transcript"
+  }
+}
