@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Horizon Atlas — Global Investment Opportunities</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #071018;
+      --deep: #0a1624;
+      --mist: #9eb4c8;
+      --paper: #e8f0f6;
+      --gold: #d4a35c;
+      --gold-bright: #f0c878;
+      --teal: #3ec9a7;
+      --coral: #e07a5f;
+      --line: rgba(158, 180, 200, 0.18);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: var(--ink);
+      color: var(--paper);
+      font-family: "IBM Plex Sans", system-ui, sans-serif;
+    }
+
+    #stage {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .atmosphere {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 70% 55% at 62% 48%, transparent 30%, rgba(7, 16, 24, 0.55) 70%, rgba(7, 16, 24, 0.92) 100%),
+        radial-gradient(ellipse 40% 30% at 20% 15%, rgba(62, 201, 167, 0.07), transparent 60%),
+        radial-gradient(ellipse 35% 25% at 85% 80%, rgba(212, 163, 92, 0.06), transparent 55%);
+    }
+
+    .hud {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      display: grid;
+      grid-template-columns: minmax(240px, 34vw) 1fr minmax(220px, 28vw);
+      grid-template-rows: auto 1fr auto;
+      padding: clamp(1.25rem, 3vw, 2.5rem);
+      gap: 1rem;
+    }
+
+    .brand-block {
+      grid-column: 1;
+      grid-row: 1;
+      max-width: 28rem;
+      animation: rise 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .brand {
+      font-family: Syne, sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+      line-height: 0.92;
+      letter-spacing: -0.04em;
+      color: var(--paper);
+    }
+
+    .brand span {
+      display: block;
+      color: var(--gold);
+    }
+
+    .tagline {
+      margin-top: 1rem;
+      font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+      font-weight: 300;
+      color: var(--mist);
+      max-width: 22rem;
+      line-height: 1.5;
+    }
+
+    .cta-row {
+      margin-top: 1.35rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      pointer-events: auto;
+    }
+
+    .cta {
+      appearance: none;
+      border: 1px solid transparent;
+      background: var(--gold);
+      color: var(--ink);
+      font-family: Syne, sans-serif;
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 0.75rem 1.15rem;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .cta:hover { transform: translateY(-1px); background: var(--gold-bright); }
+
+    .cta.ghost {
+      background: transparent;
+      border-color: var(--line);
+      color: var(--paper);
+    }
+
+    .cta.ghost:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+    }
+
+    .legend {
+      grid-column: 1;
+      grid-row: 3;
+      align-self: end;
+      pointer-events: auto;
+      animation: rise 1.1s 0.15s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .legend-title {
+      font-family: Syne, sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--mist);
+      margin-bottom: 0.75rem;
+    }
+
+    .legend-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 0.85rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.78rem;
+      color: var(--mist);
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      box-shadow: 0 0 10px currentColor;
+    }
+
+    .panel {
+      grid-column: 3;
+      grid-row: 1 / 4;
+      justify-self: end;
+      align-self: center;
+      width: min(100%, 320px);
+      pointer-events: auto;
+      background: linear-gradient(160deg, rgba(10, 22, 36, 0.92), rgba(7, 16, 24, 0.78));
+      border: 1px solid var(--line);
+      backdrop-filter: blur(14px);
+      padding: 1.35rem 1.4rem 1.5rem;
+      opacity: 0;
+      transform: translateX(18px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+
+    .panel.open {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .panel-kicker {
+      font-family: Syne, sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.45rem;
+    }
+
+    .panel-title {
+      font-family: Syne, sans-serif;
+      font-weight: 700;
+      font-size: 1.45rem;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 0.35rem;
+    }
+
+    .panel-region {
+      font-size: 0.82rem;
+      color: var(--mist);
+      margin-bottom: 1rem;
+    }
+
+    .panel-body {
+      font-size: 0.9rem;
+      line-height: 1.55;
+      color: rgba(232, 240, 246, 0.88);
+      margin-bottom: 1.1rem;
+    }
+
+    .meta {
+      display: grid;
+      gap: 0.55rem;
+      border-top: 1px solid var(--line);
+      padding-top: 0.9rem;
+    }
+
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.78rem;
+    }
+
+    .meta-row span:first-child { color: var(--mist); }
+    .meta-row span:last-child {
+      font-family: Syne, sans-serif;
+      font-weight: 600;
+      text-align: right;
+    }
+
+    .hint {
+      position: fixed;
+      left: 50%;
+      bottom: clamp(1rem, 3vw, 1.75rem);
+      transform: translateX(-50%);
+      z-index: 3;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(158, 180, 200, 0.65);
+      pointer-events: none;
+      animation: pulseSoft 3.2s ease-in-out infinite;
+    }
+
+    .demo-badge {
+      position: fixed;
+      top: clamp(1.25rem, 3vw, 2.5rem);
+      right: clamp(1.25rem, 3vw, 2.5rem);
+      z-index: 3;
+      font-family: Syne, sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--mist);
+      border: 1px solid var(--line);
+      padding: 0.4rem 0.7rem;
+      animation: rise 1.1s 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulseSoft {
+      0%, 100% { opacity: 0.45; }
+      50% { opacity: 0.9; }
+    }
+
+    @media (max-width: 900px) {
+      .hud {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr auto;
+      }
+      .panel {
+        grid-column: 1;
+        grid-row: 3;
+        width: 100%;
+        justify-self: stretch;
+        align-self: end;
+        max-height: 38vh;
+        overflow: auto;
+      }
+      .legend { display: none; }
+      .brand { font-size: clamp(2rem, 10vw, 2.8rem); }
+      .demo-badge { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="stage"></canvas>
+  <div class="atmosphere"></div>
+  <div class="demo-badge">Demo · Horizon Atlas</div>
+
+  <div class="hud">
+    <div class="brand-block">
+      <h1 class="brand">Horizon<span>Atlas</span></h1>
+      <p class="tagline">A rotating view of global capital themes — tap a beacon to explore the opportunity.</p>
+      <div class="cta-row">
+        <button class="cta" id="btn-tour" type="button">Tour opportunities</button>
+        <button class="cta ghost" id="btn-pause" type="button">Pause rotation</button>
+      </div>
+    </div>
+
+    <div class="legend">
+      <div class="legend-title">Opportunity types</div>
+      <div class="legend-list">
+        <div class="legend-item"><span class="dot" style="color:#3ec9a7;background:#3ec9a7"></span> Equity / markets</div>
+        <div class="legend-item"><span class="dot" style="color:#d4a35c;background:#d4a35c"></span> Energy & resources</div>
+        <div class="legend-item"><span class="dot" style="color:#e07a5f;background:#e07a5f"></span> Tech & innovation</div>
+        <div class="legend-item"><span class="dot" style="color:#7eb6ff;background:#7eb6ff"></span> Infra & logistics</div>
+      </div>
+    </div>
+
+    <aside class="panel" id="panel" aria-live="polite">
+      <div class="panel-kicker" id="panel-type">Opportunity</div>
+      <h2 class="panel-title" id="panel-title">Select a beacon</h2>
+      <div class="panel-region" id="panel-region">—</div>
+      <p class="panel-body" id="panel-body">The globe shows demo investment themes across regions. Click any glowing point.</p>
+      <div class="meta">
+        <div class="meta-row"><span>Horizon</span><span id="panel-horizon">—</span></div>
+        <div class="meta-row"><span>Risk posture</span><span id="panel-risk">—</span></div>
+        <div class="meta-row"><span>Thesis</span><span id="panel-thesis">—</span></div>
+      </div>
+    </aside>
+  </div>
+
+  <p class="hint">Drag to explore · Scroll to zoom · Click a beacon</p>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script type="module">
+    import * as THREE from "three";
+    import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+    const OPPORTUNITIES = [
+      {
+        id: "india",
+        name: "India mid-cap depth",
+        region: "Mumbai · South Asia",
+        lat: 19.08, lon: 72.88,
+        type: "Equity / markets",
+        color: "#3ec9a7",
+        body: "Long runway in formalisation, domestic consumption, and listed mid-caps with improving governance screens.",
+        horizon: "3–7 years",
+        risk: "Medium · cyclical earnings",
+        thesis: "Structural growth + valuation dispersion",
+      },
+      {
+        id: "singapore",
+        name: "ASEAN capital hub",
+        region: "Singapore · SE Asia",
+        lat: 1.35, lon: 103.82,
+        type: "Infra & logistics",
+        color: "#7eb6ff",
+        body: "Regional HQ, wealth, and logistics node for ASEAN manufacturing and trade rerouting.",
+        horizon: "5–10 years",
+        risk: "Low–medium",
+        thesis: "Gateway premium to Asia supply chains",
+      },
+      {
+        id: "vietnam",
+        name: "Vietnam manufacturing",
+        region: "Ho Chi Minh · SE Asia",
+        lat: 10.82, lon: 106.63,
+        type: "Equity / markets",
+        color: "#3ec9a7",
+        body: "Friend-shoring beneficiary — electronics assembly and export capacity still compounding.",
+        horizon: "4–8 years",
+        risk: "Medium · FX & policy",
+        thesis: "China+1 capacity build",
+      },
+      {
+        id: "japan",
+        name: "Japan automation",
+        region: "Tokyo · East Asia",
+        lat: 35.68, lon: 139.69,
+        type: "Tech & innovation",
+        color: "#e07a5f",
+        body: "Robotics, factory automation, and corporate reform unlocking capital efficiency.",
+        horizon: "5–10 years",
+        risk: "Medium",
+        thesis: "Demographics force productivity spend",
+      },
+      {
+        id: "uae",
+        name: "Gulf energy & logistics",
+        region: "Dubai · Middle East",
+        lat: 25.2, lon: 55.27,
+        type: "Energy & resources",
+        color: "#d4a35c",
+        body: "Energy cash flows funding diversification into ports, aviation, and sovereign capital deployment.",
+        horizon: "3–6 years",
+        risk: "Medium–high · geopolitics",
+        thesis: "Petrodollar recycling into hubs",
+      },
+      {
+        id: "shipping",
+        name: "Tanker cycle optionality",
+        region: "Indian Ocean lanes",
+        lat: 10.0, lon: 65.0,
+        type: "Infra & logistics",
+        color: "#7eb6ff",
+        body: "Freight-rate volatility creates episodic alpha in listed shipping — cyclical, not structural.",
+        horizon: "1–3 years",
+        risk: "High · rate mean-reversion",
+        thesis: "Supply tightness + trade disruption",
+      },
+      {
+        id: "nairobi",
+        name: "East Africa minerals & infra",
+        region: "Nairobi · East Africa",
+        lat: -1.29, lon: 36.82,
+        type: "Energy & resources",
+        color: "#d4a35c",
+        body: "Critical minerals, power, and corridor infrastructure for a young demographic curve.",
+        horizon: "7–15 years",
+        risk: "High · execution",
+        thesis: "Early-stage continent compounding",
+      },
+      {
+        id: "brazil",
+        name: "Brazil agri & softs",
+        region: "São Paulo · LatAm",
+        lat: -23.55, lon: -46.63,
+        type: "Energy & resources",
+        color: "#d4a35c",
+        body: "Global protein and soft-commodity exporter with FX-sensitive equity leverage.",
+        horizon: "3–7 years",
+        risk: "Medium–high · commodity & FX",
+        thesis: "Food security demand floor",
+      },
+      {
+        id: "nordic",
+        name: "Nordic renewables",
+        region: "Oslo · Northern Europe",
+        lat: 59.91, lon: 10.75,
+        type: "Energy & resources",
+        color: "#d4a35c",
+        body: "Offshore wind, grid tech, and energy transition names with policy visibility.",
+        horizon: "5–12 years",
+        risk: "Medium · rate sensitivity",
+        thesis: "Electrification capex supercycle",
+      },
+      {
+        id: "us-tech",
+        name: "US frontier tech",
+        region: "San Francisco · North America",
+        lat: 37.77, lon: -122.42,
+        type: "Tech & innovation",
+        color: "#e07a5f",
+        body: "AI infrastructure, semiconductors, and software platforms with global pricing power.",
+        horizon: "2–5 years",
+        risk: "Medium · concentration",
+        thesis: "Compute demand outruns supply",
+      },
+      {
+        id: "london",
+        name: "UK / Europe quality",
+        region: "London · Europe",
+        lat: 51.51, lon: -0.13,
+        type: "Equity / markets",
+        color: "#3ec9a7",
+        body: "Discounted quality compounders and global listings trading below US peers.",
+        horizon: "3–6 years",
+        risk: "Medium",
+        thesis: "Valuation gap vs US mega-caps",
+      },
+      {
+        id: "australia",
+        name: "Australia critical minerals",
+        region: "Perth · Oceania",
+        lat: -31.95, lon: 115.86,
+        type: "Energy & resources",
+        color: "#d4a35c",
+        body: "Lithium, copper, and rare earths tied to electrification and allied supply-chain policy.",
+        horizon: "4–9 years",
+        risk: "Medium–high · commodity cycle",
+        thesis: "Western-aligned resource security",
+      },
+    ];
+
+    const canvas = document.getElementById("stage");
+    const panel = document.getElementById("panel");
+    const btnTour = document.getElementById("btn-tour");
+    const btnPause = document.getElementById("btn-pause");
+
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x071018, 0.045);
+
+    const camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.1, 200);
+    camera.position.set(0, 0.35, 4.2);
+
+    const controls = new OrbitControls(camera, canvas);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.06;
+    controls.minDistance = 2.4;
+    controls.maxDistance = 7.5;
+    controls.enablePan = false;
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 0.55;
+    controls.rotateSpeed = 0.55;
+
+    // Starfield
+    {
+      const count = 1800;
+      const positions = new Float32Array(count * 3);
+      for (let i = 0; i < count; i++) {
+        const r = 18 + Math.random() * 40;
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.acos(2 * Math.random() - 1);
+        positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+        positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+        positions[i * 3 + 2] = r * Math.cos(phi);
+      }
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+      const mat = new THREE.PointsMaterial({
+        color: 0xb8c9d9,
+        size: 0.035,
+        sizeAttenuation: true,
+        transparent: true,
+        opacity: 0.85,
+      });
+      scene.add(new THREE.Points(geo, mat));
+    }
+
+    const globeGroup = new THREE.Group();
+    scene.add(globeGroup);
+
+    function createEarthTexture() {
+      const w = 2048;
+      const h = 1024;
+      const c = document.createElement("canvas");
+      c.width = w;
+      c.height = h;
+      const ctx = c.getContext("2d");
+
+      const ocean = ctx.createLinearGradient(0, 0, 0, h);
+      ocean.addColorStop(0, "#0c2a3d");
+      ocean.addColorStop(0.5, "#0a3d4f");
+      ocean.addColorStop(1, "#0b2233");
+      ctx.fillStyle = ocean;
+      ctx.fillRect(0, 0, w, h);
+
+      // Soft latitude bands
+      for (let y = 0; y < h; y += 48) {
+        ctx.fillStyle = `rgba(62, 201, 167, ${0.015 + (y % 96 === 0 ? 0.02 : 0)})`;
+        ctx.fillRect(0, y, w, 1);
+      }
+
+      // Continents as organic blobs (approx)
+      const lands = [
+        // N America
+        { x: 0.18, y: 0.32, rx: 0.12, ry: 0.16, rot: -0.2 },
+        // S America
+        { x: 0.28, y: 0.62, rx: 0.06, ry: 0.14, rot: 0.15 },
+        // Europe
+        { x: 0.52, y: 0.28, rx: 0.06, ry: 0.07, rot: 0.1 },
+        // Africa
+        { x: 0.54, y: 0.52, rx: 0.08, ry: 0.16, rot: 0.05 },
+        // Asia
+        { x: 0.70, y: 0.34, rx: 0.16, ry: 0.14, rot: -0.05 },
+        // India
+        { x: 0.68, y: 0.48, rx: 0.035, ry: 0.06, rot: 0.2 },
+        // Australia
+        { x: 0.82, y: 0.68, rx: 0.07, ry: 0.05, rot: 0.1 },
+        // Greenland
+        { x: 0.32, y: 0.14, rx: 0.05, ry: 0.06, rot: 0 },
+      ];
+
+      for (const land of lands) {
+        ctx.save();
+        ctx.translate(land.x * w, land.y * h);
+        ctx.rotate(land.rot);
+        const g = ctx.createRadialGradient(0, 0, 0, 0, 0, land.rx * w);
+        g.addColorStop(0, "#1a6b58");
+        g.addColorStop(0.55, "#145244");
+        g.addColorStop(1, "rgba(10, 40, 48, 0)");
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, land.rx * w, land.ry * h, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // Speckle noise for texture
+      const img = ctx.getImageData(0, 0, w, h);
+      for (let i = 0; i < img.data.length; i += 16) {
+        const n = (Math.random() - 0.5) * 10;
+        img.data[i] = Math.max(0, Math.min(255, img.data[i] + n));
+        img.data[i + 1] = Math.max(0, Math.min(255, img.data[i + 1] + n));
+        img.data[i + 2] = Math.max(0, Math.min(255, img.data[i + 2] + n));
+      }
+      ctx.putImageData(img, 0, 0);
+
+      // City lights (night side hint)
+      ctx.fillStyle = "rgba(240, 200, 120, 0.35)";
+      const lights = [
+        [0.22, 0.36], [0.24, 0.38], [0.26, 0.42], [0.29, 0.55],
+        [0.51, 0.30], [0.53, 0.32], [0.55, 0.35], [0.68, 0.40],
+        [0.72, 0.36], [0.76, 0.38], [0.78, 0.42], [0.18, 0.40],
+      ];
+      for (const [lx, ly] of lights) {
+        ctx.beginPath();
+        ctx.arc(lx * w, ly * h, 1.2 + Math.random() * 1.8, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      const tex = new THREE.CanvasTexture(c);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      tex.anisotropy = 8;
+      return tex;
+    }
+
+    const earthMat = new THREE.MeshStandardMaterial({
+      map: createEarthTexture(),
+      roughness: 0.82,
+      metalness: 0.08,
+    });
+    const earth = new THREE.Mesh(new THREE.SphereGeometry(1.35, 96, 96), earthMat);
+    globeGroup.add(earth);
+
+    // Atmosphere shell
+    const atmos = new THREE.Mesh(
+      new THREE.SphereGeometry(1.42, 64, 64),
+      new THREE.MeshBasicMaterial({
+        color: 0x3ec9a7,
+        transparent: true,
+        opacity: 0.08,
+        side: THREE.BackSide,
+      })
+    );
+    globeGroup.add(atmos);
+
+    const atmosOuter = new THREE.Mesh(
+      new THREE.SphereGeometry(1.55, 64, 64),
+      new THREE.MeshBasicMaterial({
+        color: 0x1a4a5c,
+        transparent: true,
+        opacity: 0.12,
+        side: THREE.BackSide,
+      })
+    );
+    globeGroup.add(atmosOuter);
+
+    // Subtle grid ring
+    const ring = new THREE.Mesh(
+      new THREE.RingGeometry(1.72, 1.735, 128),
+      new THREE.MeshBasicMaterial({
+        color: 0xd4a35c,
+        transparent: true,
+        opacity: 0.22,
+        side: THREE.DoubleSide,
+      })
+    );
+    ring.rotation.x = Math.PI / 2.35;
+    globeGroup.add(ring);
+
+    scene.add(new THREE.AmbientLight(0x6a8499, 0.55));
+    const key = new THREE.DirectionalLight(0xfff2d8, 1.35);
+    key.position.set(4, 2.2, 3);
+    scene.add(key);
+    const fill = new THREE.DirectionalLight(0x3ec9a7, 0.35);
+    fill.position.set(-3, -1, -2);
+    scene.add(fill);
+
+    function latLonToVector3(lat, lon, radius) {
+      const phi = (90 - lat) * (Math.PI / 180);
+      const theta = (lon + 180) * (Math.PI / 180);
+      const x = -radius * Math.sin(phi) * Math.cos(theta);
+      const z = radius * Math.sin(phi) * Math.sin(theta);
+      const y = radius * Math.cos(phi);
+      return new THREE.Vector3(x, y, z);
+    }
+
+    const markerMeshes = [];
+    const beaconGroup = new THREE.Group();
+    globeGroup.add(beaconGroup);
+
+    function makeBeacon(op) {
+      const pos = latLonToVector3(op.lat, op.lon, 1.37);
+      const color = new THREE.Color(op.color);
+
+      const core = new THREE.Mesh(
+        new THREE.SphereGeometry(0.028, 16, 16),
+        new THREE.MeshBasicMaterial({ color })
+      );
+      core.position.copy(pos);
+      core.userData = { op, kind: "core" };
+
+      const halo = new THREE.Mesh(
+        new THREE.SphereGeometry(0.055, 16, 16),
+        new THREE.MeshBasicMaterial({
+          color,
+          transparent: true,
+          opacity: 0.28,
+          depthWrite: false,
+        })
+      );
+      halo.position.copy(pos);
+      halo.userData = { op, kind: "halo" };
+
+      // Spike toward surface normal
+      const spikeGeo = new THREE.CylinderGeometry(0.004, 0.004, 0.14, 6);
+      const spike = new THREE.Mesh(
+        spikeGeo,
+        new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.75 })
+      );
+      const normal = pos.clone().normalize();
+      spike.position.copy(pos.clone().add(normal.multiplyScalar(0.07)));
+      spike.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), pos.clone().normalize());
+      spike.userData = { op, kind: "spike" };
+
+      beaconGroup.add(core, halo, spike);
+      markerMeshes.push(core, halo, spike);
+      return { core, halo, spike, op, pos };
+    }
+
+    const beacons = OPPORTUNITIES.map(makeBeacon);
+
+    // Arcs between a few hubs
+    function createArc(a, b, color) {
+      const start = latLonToVector3(a.lat, a.lon, 1.37);
+      const end = latLonToVector3(b.lat, b.lon, 1.37);
+      const mid = start.clone().add(end).multiplyScalar(0.5).normalize().multiplyScalar(1.75);
+      const curve = new THREE.QuadraticBezierCurve3(start, mid, end);
+      const points = curve.getPoints(48);
+      const geo = new THREE.BufferGeometry().setFromPoints(points);
+      const mat = new THREE.LineBasicMaterial({
+        color,
+        transparent: true,
+        opacity: 0.22,
+      });
+      return new THREE.Line(geo, mat);
+    }
+
+    const hub = OPPORTUNITIES.find((o) => o.id === "singapore");
+    ["india", "vietnam", "japan", "uae", "australia"].forEach((id) => {
+      const op = OPPORTUNITIES.find((o) => o.id === id);
+      if (hub && op) globeGroup.add(createArc(hub, op, 0x7eb6ff));
+    });
+
+    const raycaster = new THREE.Raycaster();
+    const pointer = new THREE.Vector2();
+    let selectedId = null;
+    let tourIndex = 0;
+    let tourTimer = null;
+
+    function showOpportunity(op) {
+      selectedId = op.id;
+      document.getElementById("panel-type").textContent = op.type;
+      document.getElementById("panel-title").textContent = op.name;
+      document.getElementById("panel-region").textContent = op.region;
+      document.getElementById("panel-body").textContent = op.body;
+      document.getElementById("panel-horizon").textContent = op.horizon;
+      document.getElementById("panel-risk").textContent = op.risk;
+      document.getElementById("panel-thesis").textContent = op.thesis;
+      panel.classList.add("open");
+
+      beacons.forEach((b) => {
+        const active = b.op.id === op.id;
+        b.core.scale.setScalar(active ? 1.55 : 1);
+        b.halo.scale.setScalar(active ? 1.8 : 1);
+        b.halo.material.opacity = active ? 0.5 : 0.28;
+      });
+    }
+
+    function focusOpportunity(op, duration = 1.4) {
+      showOpportunity(op);
+      const target = latLonToVector3(op.lat, op.lon, 1.37);
+      const camDir = target.clone().normalize();
+      const endPos = camDir.multiplyScalar(4.0).add(new THREE.Vector3(0, 0.25, 0));
+      const startPos = camera.position.clone();
+      const startTime = performance.now();
+      const wasAuto = controls.autoRotate;
+      controls.autoRotate = false;
+
+      function animateCam(now) {
+        const t = Math.min(1, (now - startTime) / (duration * 1000));
+        const e = 1 - Math.pow(1 - t, 3);
+        camera.position.lerpVectors(startPos, endPos, e);
+        controls.target.lerp(new THREE.Vector3(0, 0, 0), e);
+        controls.update();
+        if (t < 1) requestAnimationFrame(animateCam);
+        else {
+          setTimeout(() => { controls.autoRotate = wasAuto; }, 1200);
+        }
+      }
+      requestAnimationFrame(animateCam);
+    }
+
+    function onPointer(event) {
+      const rect = canvas.getBoundingClientRect();
+      pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+      raycaster.setFromCamera(pointer, camera);
+      const hits = raycaster.intersectObjects(markerMeshes);
+      if (hits.length) {
+        const op = hits[0].object.userData.op;
+        focusOpportunity(op);
+        canvas.style.cursor = "pointer";
+      } else {
+        canvas.style.cursor = "grab";
+      }
+    }
+
+    canvas.addEventListener("pointermove", (e) => {
+      const rect = canvas.getBoundingClientRect();
+      pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      raycaster.setFromCamera(pointer, camera);
+      canvas.style.cursor = raycaster.intersectObjects(markerMeshes).length ? "pointer" : "grab";
+    });
+    canvas.addEventListener("click", onPointer);
+
+    btnPause.addEventListener("click", () => {
+      controls.autoRotate = !controls.autoRotate;
+      btnPause.textContent = controls.autoRotate ? "Pause rotation" : "Resume rotation";
+    });
+
+    btnTour.addEventListener("click", () => {
+      if (tourTimer) {
+        clearInterval(tourTimer);
+        tourTimer = null;
+        btnTour.textContent = "Tour opportunities";
+        return;
+      }
+      btnTour.textContent = "Stop tour";
+      tourIndex = 0;
+      focusOpportunity(OPPORTUNITIES[tourIndex]);
+      tourTimer = setInterval(() => {
+        tourIndex = (tourIndex + 1) % OPPORTUNITIES.length;
+        focusOpportunity(OPPORTUNITIES[tourIndex]);
+      }, 4200);
+    });
+
+    // Open with India as default after intro
+    setTimeout(() => {
+      showOpportunity(OPPORTUNITIES[0]);
+      panel.classList.add("open");
+    }, 700);
+
+    function onResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+    window.addEventListener("resize", onResize);
+
+    const clock = new THREE.Clock();
+    function tick() {
+      const t = clock.getElapsedTime();
+      beacons.forEach((b, i) => {
+        const pulse = 1 + Math.sin(t * 2.2 + i * 0.7) * 0.12;
+        if (b.op.id !== selectedId) b.halo.scale.setScalar(pulse);
+      });
+      ring.rotation.z = t * 0.08;
+      controls.update();
+      renderer.render(scene, camera);
+      requestAnimationFrame(tick);
+    }
+    tick();
+  </script>
+</body>
+</html>

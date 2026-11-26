@@ -1,0 +1,29 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+
+# Local market / research datasets (keep out of git for now)
+data/
+nse_market_data.json
+*.log
+
+# Node / frontend build
+node_modules/
+zepstream/node_modules/
+zepstream/dist/
+dist/
+
+# OS / editor
+.DS_Store
+.cursor/
+*.swp
+*.swo

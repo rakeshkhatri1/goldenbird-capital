@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cost Vectors — Company Lineage Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #061018;
+      --panel: #0c1a24;
+      --panel-2: #102230;
+      --line: rgba(140, 170, 190, 0.18);
+      --text: #e7f0f6;
+      --muted: #8aa0b2;
+      --gold: #d4a35c;
+      --teal: #3ec9a7;
+      --coral: #e07a5f;
+      --blue: #6eb0ff;
+      --warn: #e8b84a;
+      --good: #3ec9a7;
+      --bad: #e07a5f;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(ellipse 80% 50% at 10% 0%, rgba(62, 201, 167, 0.08), transparent 50%),
+        radial-gradient(ellipse 60% 40% at 90% 100%, rgba(212, 163, 92, 0.07), transparent 45%),
+        var(--bg);
+      color: var(--text);
+      font-family: "IBM Plex Sans", system-ui, sans-serif;
+    }
+
+    .shell {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: clamp(1.25rem, 3vw, 2rem);
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      min-height: 100vh;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 1rem;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 1.1rem;
+    }
+
+    .brand {
+      font-family: Syne, sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+
+    .brand em {
+      font-style: normal;
+      color: var(--gold);
+    }
+
+    .pitch {
+      margin-top: 0.55rem;
+      max-width: 42rem;
+      font-size: 0.92rem;
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .badge {
+      font-family: Syne, sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      padding: 0.4rem 0.7rem;
+      align-self: flex-start;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      align-items: center;
+    }
+
+    .toolbar label {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-right: 0.25rem;
+    }
+
+    .chip {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--text);
+      font-family: "IBM Plex Sans", sans-serif;
+      font-size: 0.82rem;
+      padding: 0.55rem 0.9rem;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s, color 0.15s;
+    }
+
+    .chip:hover { border-color: var(--teal); color: var(--teal); }
+    .chip.active {
+      background: rgba(62, 201, 167, 0.12);
+      border-color: var(--teal);
+      color: var(--teal);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr minmax(260px, 320px);
+      gap: 1rem;
+      flex: 1;
+      min-height: 0;
+    }
+
+    @media (max-width: 960px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+
+    .graph-card {
+      background: linear-gradient(165deg, rgba(12, 26, 36, 0.95), rgba(8, 18, 26, 0.9));
+      border: 1px solid var(--line);
+      position: relative;
+      overflow: hidden;
+      min-height: 560px;
+    }
+
+    .lane-labels {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      pointer-events: none;
+      z-index: 1;
+      border-bottom: 1px solid var(--line);
+      background: rgba(6, 16, 24, 0.75);
+      backdrop-filter: blur(8px);
+    }
+
+    .lane-labels span {
+      padding: 0.65rem 0.5rem;
+      text-align: center;
+      font-family: Syne, sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-right: 1px solid var(--line);
+    }
+
+    .lane-labels span:last-child { border-right: none; }
+
+    #graph {
+      width: 100%;
+      height: 100%;
+      min-height: 560px;
+      display: block;
+      cursor: grab;
+    }
+
+    #graph:active { cursor: grabbing; }
+
+    .side {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      padding: 1.1rem 1.15rem;
+    }
+
+    .panel h2 {
+      font-family: Syne, sans-serif;
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.25rem;
+    }
+
+    .panel .kicker {
+      font-family: Syne, sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.35rem;
+    }
+
+    .panel .sub {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 0.9rem;
+    }
+
+    .panel p {
+      font-size: 0.88rem;
+      line-height: 1.55;
+      color: rgba(231, 240, 246, 0.9);
+    }
+
+    .stats {
+      display: grid;
+      gap: 0.5rem;
+      margin-top: 0.95rem;
+      border-top: 1px solid var(--line);
+      padding-top: 0.85rem;
+    }
+
+    .stat {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.75rem;
+      font-size: 0.78rem;
+    }
+
+    .stat span:first-child { color: var(--muted); }
+    .stat span:last-child {
+      font-family: "IBM Plex Mono", monospace;
+      font-weight: 500;
+      text-align: right;
+    }
+
+    .cost-bars { margin-top: 0.85rem; display: grid; gap: 0.55rem; }
+
+    .cost-row { display: grid; gap: 0.25rem; }
+
+    .cost-row-top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+    }
+
+    .cost-row-top span:last-child {
+      font-family: "IBM Plex Mono", monospace;
+      color: var(--muted);
+    }
+
+    .bar-track {
+      height: 6px;
+      background: rgba(140, 170, 190, 0.12);
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      width: 0;
+      transition: width 0.5s ease;
+    }
+
+    .signal {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.75rem;
+    }
+
+    .signal.up { color: var(--bad); }
+    .signal.down { color: var(--good); }
+    .signal.flat { color: var(--warn); }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .legend i {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      margin-right: 0.3rem;
+      vertical-align: -1px;
+    }
+
+    .footer-note {
+      font-size: 0.72rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .empty-hint {
+      position: absolute;
+      inset: 3.2rem 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div>
+        <div class="brand">Cost <em>Vectors</em></div>
+        <p class="pitch">
+          Most platforms show where the stock price is. This demo maps where margins are going —
+          global raw-material vectors, petrochemical shifts, and operational cost lineage before the print hits Dalal Street.
+        </p>
+      </div>
+      <div class="badge">Sample demo · not live feeds</div>
+    </header>
+
+    <div class="toolbar">
+      <label>Company</label>
+      <div id="company-chips"></div>
+    </div>
+
+    <div class="layout">
+      <section class="graph-card">
+        <div class="lane-labels">
+          <span>World signals</span>
+          <span>Feedstocks</span>
+          <span>Company costs</span>
+          <span>P&amp;L levers</span>
+          <span>Street read</span>
+        </div>
+        <svg id="graph" viewBox="0 0 1100 620" preserveAspectRatio="xMidYMid meet"></svg>
+      </section>
+
+      <aside class="side">
+        <div class="panel" id="company-panel">
+          <div class="kicker" id="cp-sector">Sector</div>
+          <h2 id="cp-name">—</h2>
+          <div class="sub" id="cp-tagline">—</div>
+          <p id="cp-blurb">Select a company to see its cost lineage graph.</p>
+          <div class="stats">
+            <div class="stat"><span>Demo symbol</span><span id="cp-sym">—</span></div>
+            <div class="stat"><span>Cost sensitivity</span><span id="cp-sens">—</span></div>
+            <div class="stat"><span>Primary risk vector</span><span id="cp-risk">—</span></div>
+          </div>
+        </div>
+
+        <div class="panel" id="node-panel">
+          <div class="kicker">Selected node</div>
+          <h2 id="np-title">Click any node</h2>
+          <div class="sub" id="np-lane">—</div>
+          <p id="np-body">Nodes are demo cost dependencies. Edge thickness ≈ relative cost weight.</p>
+          <div class="stats" id="np-stats" style="display:none">
+            <div class="stat"><span>Vector (30d)</span><span class="signal" id="np-vector">—</span></div>
+            <div class="stat"><span>Cost weight</span><span id="np-weight">—</span></div>
+            <div class="stat"><span>Lag to P&amp;L</span><span id="np-lag">—</span></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="kicker">Cost stack</div>
+          <h2 style="font-size:1rem;margin-bottom:0.35rem">Where the money goes</h2>
+          <div class="cost-bars" id="cost-bars"></div>
+          <div class="legend" style="margin-top:0.9rem">
+            <span><i style="background:var(--coral)"></i>Rising input</span>
+            <span><i style="background:var(--teal)"></i>Easing input</span>
+            <span><i style="background:var(--gold)"></i>Mixed / watch</span>
+          </div>
+        </div>
+
+        <p class="footer-note">
+          Demo data only — illustrative linkages for pipe, shipping, polyester, cement, and specialty chemicals.
+          Live build would wire Screener COGS notes + commodity indices (Brent, PVC, PTA, coal, bunker).
+        </p>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    const LANES = ["world", "feedstock", "cost", "pnl", "street"];
+    const LANE_X = { world: 95, feedstock: 310, cost: 550, pnl: 790, street: 1010 };
+
+    const COMPANIES = {
+      PRINCEPIPE: {
+        name: "Prince Pipes",
+        symbol: "PRINCEPIPE",
+        sector: "Building materials · PVC pipes",
+        tagline: "Resin in → pipes out",
+        blurb: "Margins track PVC resin and plasticizer more than housing headlines. When naphtha/PVC spikes, gross margin compresses with a 1–2 quarter lag unless price hikes stick.",
+        sensitivity: "High · resin",
+        risk: "PVC / naphtha complex",
+        costs: [
+          { label: "PVC resin", pct: 48, tone: "up" },
+          { label: "Plasticizers & additives", pct: 14, tone: "flat" },
+          { label: "Power & fuel", pct: 9, tone: "down" },
+          { label: "Logistics / freight", pct: 11, tone: "flat" },
+          { label: "Other COGS & opex", pct: 18, tone: "flat" },
+        ],
+        nodes: [
+          { id: "brent", lane: "world", label: "Brent crude", vector: +4.2, lag: "2–6 wks", note: "Upstream energy price sets naphtha and freight psychology." },
+          { id: "naphtha", lane: "world", label: "Naphtha Asia", vector: +6.1, lag: "2–4 wks", note: "Key petrochemical feedstock for ethylene → PVC chain." },
+          { id: "china-pvc", lane: "world", label: "China PVC export", vector: -2.4, lag: "3–8 wks", note: "Import parity for Indian converters; soft China dumps ease domestic resin." },
+          { id: "pvc", lane: "feedstock", label: "PVC resin India", weight: 48, vector: +5.5, lag: "1–2 Q", note: "Largest single COGS line for pipe makers." },
+          { id: "plasticizer", lane: "feedstock", label: "Plasticizers", weight: 14, vector: +1.2, lag: "1 Q", note: "Flexible compound inputs; smaller but sticky." },
+          { id: "power", lane: "feedstock", label: "Industrial power", weight: 9, vector: -1.8, lag: "1 Q", note: "Extrusion energy intensity." },
+          { id: "cogs-resin", lane: "cost", label: "Resin COGS", weight: 48, vector: +5.5, lag: "1–2 Q", note: "Direct pass-through risk if ASP lag." },
+          { id: "cogs-other", lane: "cost", label: "Conversion costs", weight: 20, vector: +0.4, lag: "1 Q", note: "Power, labour, packaging, plant opex." },
+          { id: "freight", lane: "cost", label: "Outbound freight", weight: 11, vector: +0.8, lag: "weeks", note: "Distributor reach across India." },
+          { id: "gm", lane: "pnl", label: "Gross margin", vector: -1.6, lag: "same Q", note: "Resin up faster than price hikes → GM squeeze." },
+          { id: "ebitda", lane: "pnl", label: "EBITDA margin", vector: -1.1, lag: "1 Q", note: "Operating leverage on volume + mix." },
+          { id: "street", lane: "street", label: "Estimate risk", vector: -0.8, lag: "—", note: "Street often reacts after quarterly GM print — lineage aims to front-run that." },
+        ],
+        edges: [
+          ["brent", "naphtha", 0.7],
+          ["naphtha", "pvc", 0.85],
+          ["china-pvc", "pvc", 0.55],
+          ["pvc", "cogs-resin", 1],
+          ["plasticizer", "cogs-other", 0.45],
+          ["power", "cogs-other", 0.4],
+          ["cogs-resin", "gm", 0.95],
+          ["cogs-other", "gm", 0.5],
+          ["freight", "ebitda", 0.35],
+          ["gm", "ebitda", 0.8],
+          ["ebitda", "street", 0.9],
+        ],
+      },
+
+      GESHIP: {
+        name: "Great Eastern Shipping",
+        symbol: "GESHIP",
+        sector: "Shipping · tankers & offshore",
+        tagline: "Bunker + rates → earnings",
+        blurb: "Profit is a function of time-charter equivalent rates minus bunker fuel and opex. Middle East route disruption can spike rates faster than bunker — temporary earnings shock, not a moat.",
+        sensitivity: "Very high · freight",
+        risk: "Spot tanker rates / bunker",
+        costs: [
+          { label: "Bunker fuel", pct: 28, tone: "up" },
+          { label: "Crew & technical opex", pct: 22, tone: "flat" },
+          { label: "Port / canal / insurance", pct: 16, tone: "up" },
+          { label: "Drydock & maintenance", pct: 12, tone: "flat" },
+          { label: "Finance & other", pct: 22, tone: "down" },
+        ],
+        nodes: [
+          { id: "hormuz", lane: "world", label: "Route risk / Hormuz", vector: +18, lag: "days", note: "Ton-mile and idle fleet effects lift spot freights." },
+          { id: "brent", lane: "world", label: "Brent crude", vector: +4.2, lag: "days–weeks", note: "Drives bunker and dirty tanker demand psychology." },
+          { id: "bunker", lane: "feedstock", label: "VLSFO bunker", weight: 28, vector: +5.0, lag: "voyage", note: "Largest variable voyage cost." },
+          { id: "tce", lane: "feedstock", label: "Tanker TCE rates", weight: 0, vector: +42, lag: "spot", note: "Revenue vector — not a cost, but the opposing force." },
+          { id: "voyage", lane: "cost", label: "Voyage costs", weight: 44, vector: +6.5, lag: "voyage", note: "Bunker + port + canal + war risk premium." },
+          { id: "opex", lane: "cost", label: "Ship opex", weight: 34, vector: +1.2, lag: "quarter", note: "Crew, stores, R&M, insurance." },
+          { id: "tce-earn", lane: "pnl", label: "TCE earnings", vector: +38, lag: "spot", note: "Rate spike dominates when utilization high." },
+          { id: "pat", lane: "pnl", label: "PAT / ROCE", vector: +25, lag: "1 Q", note: "Cyclical peak earnings — street P/E looks 'cheap'." },
+          { id: "street", lane: "street", label: "Cycle trap risk", vector: +12, lag: "—", note: "Street may capitalize peak TCE; lineage flags mean-reversion." },
+        ],
+        edges: [
+          ["hormuz", "tce", 0.9],
+          ["brent", "bunker", 0.75],
+          ["brent", "tce", 0.4],
+          ["bunker", "voyage", 0.85],
+          ["tce", "tce-earn", 1],
+          ["voyage", "pat", 0.45],
+          ["opex", "pat", 0.35],
+          ["tce-earn", "pat", 0.95],
+          ["pat", "street", 0.85],
+        ],
+      },
+
+      FILATEX: {
+        name: "Filatex India",
+        symbol: "FILATEX",
+        sector: "Polyester yarn · textiles",
+        tagline: "PTA + MEG → PSF / yarn",
+        blurb: "Polyester chain is a classic petrochemical pass-through story. PTA/MEG spreads and China polyester operating rates matter more than apparel demand prints in the short run.",
+        sensitivity: "High · PTA/MEG",
+        risk: "Polyester chain spreads",
+        costs: [
+          { label: "PTA", pct: 36, tone: "up" },
+          { label: "MEG", pct: 22, tone: "flat" },
+          { label: "Power & utilities", pct: 10, tone: "down" },
+          { label: "Packaging & logistics", pct: 8, tone: "flat" },
+          { label: "Other conversion", pct: 24, tone: "flat" },
+        ],
+        nodes: [
+          { id: "px", lane: "world", label: "PX / aromatics", vector: +3.1, lag: "2–4 wks", note: "Upstream to PTA." },
+          { id: "china-poly", lane: "world", label: "China polyester rates", vector: -3.5, lag: "2–6 wks", note: "Sets Asian yarn price ceiling." },
+          { id: "pta", lane: "feedstock", label: "PTA", weight: 36, vector: +4.0, lag: "weeks", note: "Largest monomer cost." },
+          { id: "meg", lane: "feedstock", label: "MEG", weight: 22, vector: +0.6, lag: "weeks", note: "Second monomer; often ethane/naphtha linked." },
+          { id: "chip", lane: "cost", label: "Polyester chip / melt", weight: 55, vector: +2.8, lag: "weeks", note: "Integrated melt cost before spinning." },
+          { id: "spin", lane: "cost", label: "Spinning conversion", weight: 20, vector: +0.5, lag: "1 Q", note: "Power, labour, spares." },
+          { id: "spread", lane: "pnl", label: "Yarn–feedstock spread", vector: -1.4, lag: "weeks", note: "The real margin vector." },
+          { id: "ebitda", lane: "pnl", label: "EBITDA", vector: -0.9, lag: "1 Q", note: "Follows spread with inventory lag." },
+          { id: "street", lane: "street", label: "Textile demand narrative", vector: -0.4, lag: "—", note: "Street often debates demand; lineage tracks spreads first." },
+        ],
+        edges: [
+          ["px", "pta", 0.8],
+          ["china-poly", "spread", 0.55],
+          ["pta", "chip", 0.9],
+          ["meg", "chip", 0.7],
+          ["chip", "spread", 0.85],
+          ["spin", "ebitda", 0.4],
+          ["spread", "ebitda", 0.95],
+          ["ebitda", "street", 0.8],
+        ],
+      },
+
+      ORIENTCEM: {
+        name: "Orient Cement",
+        symbol: "ORIENTCEM",
+        sector: "Cement",
+        tagline: "Petcoke / coal → power & kiln",
+        blurb: "Cement is energy-in-a-bag. Petcoke, coal, and diesel freight dominate variable cost. Realization (pricing power by region) is the other half of the equation.",
+        sensitivity: "High · fuel",
+        risk: "Petcoke / coal + freight",
+        costs: [
+          { label: "Petcoke & coal", pct: 32, tone: "down" },
+          { label: "Power", pct: 14, tone: "flat" },
+          { label: "Limestone & royalty", pct: 12, tone: "flat" },
+          { label: "Inbound / outbound freight", pct: 18, tone: "up" },
+          { label: "Other opex", pct: 24, tone: "flat" },
+        ],
+        nodes: [
+          { id: "petcoke", lane: "world", label: "Imported petcoke", vector: -4.5, lag: "1–2 mo", note: "Major kiln fuel; import parity sensitive." },
+          { id: "coal", lane: "world", label: "Thermal coal", vector: -2.1, lag: "1–2 mo", note: "Captive power / alternate fuel mix." },
+          { id: "diesel", lane: "world", label: "Diesel", vector: +1.4, lag: "weeks", note: "Road freight for bag & bulk." },
+          { id: "fuel", lane: "feedstock", label: "Kiln fuel mix", weight: 32, vector: -3.2, lag: "1 Q", note: "Blended energy cost per tonne." },
+          { id: "power", lane: "feedstock", label: "Power cost / t", weight: 14, vector: -0.5, lag: "1 Q", note: "Grid + captive." },
+          { id: "energy-cogs", lane: "cost", label: "Energy COGS", weight: 46, vector: -2.4, lag: "1 Q", note: "Largest swing factor in unit cost." },
+          { id: "logistics", lane: "cost", label: "Logistics cost", weight: 18, vector: +1.4, lag: "weeks", note: "Lead radius vs realization." },
+          { id: "ncr", lane: "pnl", label: "Net realization", vector: +0.8, lag: "weeks", note: "Pricing by cluster — South/West dynamics." },
+          { id: "ebitda-t", lane: "pnl", label: "EBITDA / tonne", vector: +1.9, lag: "1 Q", note: "Fuel ease + stable prices = margin expand." },
+          { id: "street", lane: "street", label: "Volume vs margin debate", vector: +0.6, lag: "—", note: "Street oscillates between demand and cost; lineage weights fuel first." },
+        ],
+        edges: [
+          ["petcoke", "fuel", 0.85],
+          ["coal", "fuel", 0.55],
+          ["coal", "power", 0.45],
+          ["diesel", "logistics", 0.7],
+          ["fuel", "energy-cogs", 0.95],
+          ["power", "energy-cogs", 0.5],
+          ["energy-cogs", "ebitda-t", 0.75],
+          ["logistics", "ebitda-t", 0.4],
+          ["ncr", "ebitda-t", 0.85],
+          ["ebitda-t", "street", 0.9],
+        ],
+      },
+
+      ROSSARI: {
+        name: "Rossari Biotech",
+        symbol: "ROSSARI",
+        sector: "Specialty chemicals",
+        tagline: "Multi-input specialty basket",
+        blurb: "Less single-commodity than pipes or polyester — still exposed to solvents, surfactants intermediates, and China specialty dumps. Lineage is a basket, not one ticker.",
+        sensitivity: "Medium · basket",
+        risk: "Specialty intermediates basket",
+        costs: [
+          { label: "Key intermediates", pct: 34, tone: "flat" },
+          { label: "Solvents", pct: 12, tone: "up" },
+          { label: "Packaging", pct: 8, tone: "flat" },
+          { label: "Power & utilities", pct: 7, tone: "down" },
+          { label: "R&D / other opex", pct: 39, tone: "flat" },
+        ],
+        nodes: [
+          { id: "china-chem", lane: "world", label: "China specialty prices", vector: -2.8, lag: "1–2 mo", note: "Import competition & intermediate pricing." },
+          { id: "crude-chem", lane: "world", label: "Chemicals complex", vector: +2.0, lag: "1–2 mo", note: "Broad petrochemical tone." },
+          { id: "intermed", lane: "feedstock", label: "Key intermediates", weight: 34, vector: +0.5, lag: "1 Q", note: "Formulation-specific basket." },
+          { id: "solvent", lane: "feedstock", label: "Solvents", weight: 12, vector: +2.4, lag: "weeks", note: "Often crude/naphtha linked." },
+          { id: "rm", lane: "cost", label: "RM basket COGS", weight: 46, vector: +1.0, lag: "1 Q", note: "Blended input cost." },
+          { id: "opex", lane: "cost", label: "Conversion & SG&A", weight: 30, vector: +0.3, lag: "1 Q", note: "Higher fixed cost share than commodity chem." },
+          { id: "gm", lane: "pnl", label: "Gross margin", vector: +0.4, lag: "1 Q", note: "Formulation mix can offset RM." },
+          { id: "ebitda", lane: "pnl", label: "EBITDA margin", vector: +0.2, lag: "1–2 Q", note: "Watch working capital with growth." },
+          { id: "street", lane: "street", label: "Specialty premium", vector: +0.1, lag: "—", note: "Street pays for mix; lineage checks if RM basket is quietly rising." },
+        ],
+        edges: [
+          ["china-chem", "intermed", 0.65],
+          ["crude-chem", "solvent", 0.7],
+          ["crude-chem", "intermed", 0.4],
+          ["intermed", "rm", 0.9],
+          ["solvent", "rm", 0.5],
+          ["rm", "gm", 0.8],
+          ["opex", "ebitda", 0.45],
+          ["gm", "ebitda", 0.85],
+          ["ebitda", "street", 0.75],
+        ],
+      },
+    };
+
+    const LANE_LABEL = {
+      world: "World signal",
+      feedstock: "Feedstock",
+      cost: "Company cost",
+      pnl: "P&L lever",
+      street: "Street read",
+    };
+
+    let activeId = "PRINCEPIPE";
+    let selectedNodeId = null;
+
+    const chipsEl = document.getElementById("company-chips");
+    const svg = document.getElementById("graph");
+
+    Object.keys(COMPANIES).forEach((id) => {
+      const btn = document.createElement("button");
+      btn.className = "chip" + (id === activeId ? " active" : "");
+      btn.type = "button";
+      btn.textContent = COMPANIES[id].name;
+      btn.addEventListener("click", () => {
+        activeId = id;
+        selectedNodeId = null;
+        [...chipsEl.children].forEach((c) => c.classList.remove("active"));
+        btn.classList.add("active");
+        renderAll();
+      });
+      chipsEl.appendChild(btn);
+    });
+
+    function toneColor(vector) {
+      if (vector > 1.2) return "var(--coral)";
+      if (vector < -1.2) return "var(--teal)";
+      return "var(--gold)";
+    }
+
+    function formatVector(v) {
+      const sign = v > 0 ? "+" : "";
+      const cls = v > 1.2 ? "up" : v < -1.2 ? "down" : "flat";
+      return { text: `${sign}${v.toFixed(1)}%`, cls };
+    }
+
+    function layoutNodes(nodes) {
+      const byLane = {};
+      LANES.forEach((l) => { byLane[l] = []; });
+      nodes.forEach((n) => byLane[n.lane].push(n));
+      const positions = {};
+      const top = 90;
+      const bottom = 560;
+      LANES.forEach((lane) => {
+        const list = byLane[lane];
+        const n = list.length;
+        list.forEach((node, i) => {
+          const y = n === 1 ? (top + bottom) / 2 : top + ((bottom - top) * i) / (n - 1);
+          positions[node.id] = { x: LANE_X[lane], y };
+        });
+      });
+      return positions;
+    }
+
+    function curvedPath(x1, y1, x2, y2) {
+      const mx = (x1 + x2) / 2;
+      return `M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`;
+    }
+
+    function renderGraph(company) {
+      const pos = layoutNodes(company.nodes);
+      const nodeMap = Object.fromEntries(company.nodes.map((n) => [n.id, n]));
+      let html = "";
+
+      // subtle lane guides
+      LANES.forEach((lane) => {
+        const x = LANE_X[lane];
+        html += `<line x1="${x}" y1="72" x2="${x}" y2="580" stroke="rgba(140,170,190,0.08)" stroke-dasharray="4 8"/>`;
+      });
+
+      company.edges.forEach(([a, b, w]) => {
+        const pa = pos[a];
+        const pb = pos[b];
+        if (!pa || !pb) return;
+        const na = nodeMap[a];
+        const stroke = toneColor(na?.vector ?? 0);
+        const width = 1.2 + w * 3.2;
+        const opacity = selectedNodeId && selectedNodeId !== a && selectedNodeId !== b ? 0.12 : 0.35 + w * 0.35;
+        html += `<path d="${curvedPath(pa.x + 70, pa.y, pb.x - 70, pb.y)}" fill="none" stroke="${stroke}" stroke-width="${width}" opacity="${opacity}" />`;
+      });
+
+      company.nodes.forEach((node) => {
+        const p = pos[node.id];
+        const active = selectedNodeId === node.id;
+        const dim = selectedNodeId && !active;
+        const fill = toneColor(node.vector ?? 0);
+        const w = 140;
+        const h = 52;
+        const x = p.x - w / 2;
+        const y = p.y - h / 2;
+        const opacity = dim ? 0.28 : 1;
+        html += `
+          <g class="node" data-id="${node.id}" opacity="${opacity}" style="cursor:pointer">
+            <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="2"
+              fill="${active ? "#143042" : "#0c1a24"}"
+              stroke="${active ? fill : "rgba(140,170,190,0.28)"}"
+              stroke-width="${active ? 2 : 1}" />
+            <circle cx="${x + 14}" cy="${p.y}" r="5" fill="${fill}" />
+            <text x="${x + 26}" y="${p.y - 4}" fill="#e7f0f6" font-size="12" font-family="Syne, sans-serif" font-weight="600">${escapeXml(node.label)}</text>
+            <text x="${x + 26}" y="${p.y + 14}" fill="#8aa0b2" font-size="10" font-family="IBM Plex Mono, monospace">${node.vector != null ? (node.vector > 0 ? "+" : "") + node.vector.toFixed(1) + "% 30d" : "—"}</text>
+          </g>`;
+      });
+
+      svg.innerHTML = html;
+      svg.querySelectorAll(".node").forEach((g) => {
+        g.addEventListener("click", (e) => {
+          e.stopPropagation();
+          selectedNodeId = g.getAttribute("data-id");
+          renderAll();
+        });
+      });
+    }
+
+    function escapeXml(s) {
+      return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    function renderCompanyPanel(c) {
+      document.getElementById("cp-sector").textContent = c.sector;
+      document.getElementById("cp-name").textContent = c.name;
+      document.getElementById("cp-tagline").textContent = c.tagline;
+      document.getElementById("cp-blurb").textContent = c.blurb;
+      document.getElementById("cp-sym").textContent = c.symbol;
+      document.getElementById("cp-sens").textContent = c.sensitivity;
+      document.getElementById("cp-risk").textContent = c.risk;
+
+      const bars = document.getElementById("cost-bars");
+      bars.innerHTML = c.costs.map((row) => {
+        const color = row.tone === "up" ? "var(--coral)" : row.tone === "down" ? "var(--teal)" : "var(--gold)";
+        return `
+          <div class="cost-row">
+            <div class="cost-row-top"><span>${row.label}</span><span>${row.pct}%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:${row.pct}%;background:${color}"></div></div>
+          </div>`;
+      }).join("");
+    }
+
+    function renderNodePanel(c) {
+      const node = c.nodes.find((n) => n.id === selectedNodeId);
+      if (!node) {
+        document.getElementById("np-title").textContent = "Click any node";
+        document.getElementById("np-lane").textContent = "Explore the lineage left → right";
+        document.getElementById("np-body").textContent = "World signals feed feedstocks → company cost buckets → P&L levers → how Dalal Street usually mis-reads the lag.";
+        document.getElementById("np-stats").style.display = "none";
+        return;
+      }
+      document.getElementById("np-title").textContent = node.label;
+      document.getElementById("np-lane").textContent = LANE_LABEL[node.lane] || node.lane;
+      document.getElementById("np-body").textContent = node.note;
+      document.getElementById("np-stats").style.display = "grid";
+      const v = formatVector(node.vector ?? 0);
+      const el = document.getElementById("np-vector");
+      el.textContent = v.text;
+      el.className = "signal " + v.cls;
+      document.getElementById("np-weight").textContent = node.weight != null ? `${node.weight}% of cost stack` : "— (signal / lever)";
+      document.getElementById("np-lag").textContent = node.lag || "—";
+    }
+
+    function renderAll() {
+      const c = COMPANIES[activeId];
+      renderCompanyPanel(c);
+      renderGraph(c);
+      renderNodePanel(c);
+    }
+
+    svg.addEventListener("click", () => {
+      selectedNodeId = null;
+      renderAll();
+    });
+
+    renderAll();
+  </script>
+</body>
+</html>
