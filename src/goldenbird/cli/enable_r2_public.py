@@ -20,10 +20,8 @@ from __future__ import annotations
 
 import json
 import os
-import sys
 import urllib.error
 import urllib.request
-from pathlib import Path
 
 from dotenv import load_dotenv
 
