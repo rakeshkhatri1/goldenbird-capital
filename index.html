@@ -1614,6 +1614,12 @@
         let activePayload = JSON.parse(JSON.stringify(MASTER_FALLBACK));
         let activeTimeframe = 'weekly';
         let activeTab = 'home-tab';
+        const TAB_STORAGE_KEY = 'nse_engine_active_tab_v1';
+        const TAB_IDS = [
+            'home-tab', 'sector-tab', 'sector-compare-tab', 'screener-tab',
+            'business-updates-tab', 'deep-research-tab', 'pipeline-tab',
+            'concall-tab', 'realty-tab',
+        ];
         let niftyTvReady = false;
         let selectedHomeArticleId = null;
         let currentPage = 1;
@@ -1650,6 +1656,9 @@
         let realtyUniverse = null;
         let realtyReturns1y = null;
         let realtyReturns5y = null;
+        /** @type {'idle'|'loading'|'ready'|'error'} */
+        let realtyLoadState = 'idle';
+        let realtyLoadPromise = null;
         const NIFTY_REALTY_SYMBOLS = new Set([
             'DLF', 'LODHA', 'PHOENIXLTD', 'PRESTIGE', 'GODREJPROP',
             'OBEROIRLTY', 'BRIGADE', 'ANANTRAJ', 'ABREL', 'SOBHA',
@@ -4681,16 +4690,52 @@
             renderResearchFeeds();
         }
 
-        function switchTab(tabId) {
-            activeTab = tabId;
+        function normalizeTabId(raw) {
+            const v = String(raw || '').trim().toLowerCase().replace(/^#/, '');
+            if (!v) return null;
+            if (TAB_IDS.includes(v)) return v;
+            const short = `${v}-tab`;
+            if (TAB_IDS.includes(short)) return short;
+            return null;
+        }
+
+        function readStoredTabId() {
+            try {
+                return normalizeTabId(localStorage.getItem(TAB_STORAGE_KEY));
+            } catch (_) {
+                return null;
+            }
+        }
+
+        function persistActiveTab(tabId) {
+            const id = normalizeTabId(tabId) || 'home-tab';
+            try { localStorage.setItem(TAB_STORAGE_KEY, id); } catch (_) { /* ignore */ }
+            const short = id.replace(/-tab$/, '');
+            const nextHash = `#${short}`;
+            if (location.hash !== nextHash) {
+                history.replaceState(null, '', `${location.pathname}${location.search}${nextHash}`);
+            }
+        }
+
+        function resolveInitialTabId() {
+            return normalizeTabId(location.hash)
+                || readStoredTabId()
+                || 'home-tab';
+        }
+
+        function switchTab(tabId, opts = {}) {
+            const id = normalizeTabId(tabId) || 'home-tab';
+            activeTab = id;
+            if (opts.persist !== false) persistActiveTab(id);
+
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            const pane = document.getElementById(tabId);
+            const pane = document.getElementById(id);
             if (pane) pane.classList.remove('hidden');
 
             const off = 'text-[#5c4f44] hover:text-[#1a1410] font-semibold text-sm transition-all whitespace-nowrap px-4';
             const on = 'tab-active font-semibold text-sm transition-all whitespace-nowrap px-4';
             ['btn-home-tab', 'btn-sector-tab', 'btn-sector-compare-tab', 'btn-screener-tab', 'btn-business-updates-tab', 'btn-deep-research-tab', 'btn-pipeline-tab', 'btn-concall-tab', 'btn-realty-tab']
-                .forEach(id => { const el = document.getElementById(id); if (el) el.className = off; });
+                .forEach(btnId => { const el = document.getElementById(btnId); if (el) el.className = off; });
 
             const btnMap = {
                 'home-tab': 'btn-home-tab',
@@ -4703,24 +4748,25 @@
                 'concall-tab': 'btn-concall-tab',
                 'realty-tab': 'btn-realty-tab',
             };
-            const activeBtn = document.getElementById(btnMap[tabId] || 'btn-home-tab');
+            const activeBtn = document.getElementById(btnMap[id] || 'btn-home-tab');
             if (activeBtn) activeBtn.className = on;
 
-            if (tabId === 'home-tab') {
+            if (id === 'home-tab') {
                 renderHomeTab();
-            } else if (tabId === 'sector-tab') {
+            } else if (id === 'sector-tab') {
                 renderSectorTab();
-            } else if (tabId === 'sector-compare-tab') {
+            } else if (id === 'sector-compare-tab') {
                 renderSectorCompareTab();
-            } else if (tabId === 'business-updates-tab') {
+            } else if (id === 'business-updates-tab') {
                 renderBusinessUpdatesTab();
-            } else if (tabId === 'pipeline-tab') {
+            } else if (id === 'pipeline-tab') {
                 renderPipelineTab();
-            } else if (tabId === 'deep-research-tab') {
+            } else if (id === 'deep-research-tab') {
                 renderDeepResearchTab();
-            } else if (tabId === 'concall-tab') {
+            } else if (id === 'concall-tab') {
                 renderConcallScansTab();
-            } else if (tabId === 'realty-tab') {
+            } else if (id === 'realty-tab') {
+                ensureRealtyDataLoaded();
                 renderRealtyTab();
             }
         }
@@ -4748,21 +4794,39 @@
             return null;
         }
 
+        function ensureRealtyDataLoaded() {
+            if (realtyLoadPromise) return realtyLoadPromise;
+            realtyLoadPromise = loadRealtyPeerCompare();
+            return realtyLoadPromise;
+        }
+
         async function loadRealtyPeerCompare() {
+            realtyLoadState = 'loading';
+            if (activeTab === 'realty-tab') renderRealtyTab();
             // Prefer public R2 (no credentials in browser), then Pages-bundled data/, then sample.
-            realtyPeerData = await fetchJsonCandidates([
-                'data/realty_peer_compare.json',
-                'examples/realty_peer_compare.sample.json',
-            ], 'Realty peer pack');
-            realtyUniverse = await fetchJsonCandidates([
-                'data/realty_universe_screener.json',
-            ], 'Realty universe');
-            realtyReturns1y = await fetchJsonCandidates([
-                'data/realty_vs_nifty_realty_1y.json',
-            ], 'Realty 1Y returns');
-            realtyReturns5y = await fetchJsonCandidates([
-                'data/realty_vs_nifty_realty_5y.json',
-            ], 'Realty 5Y returns');
+            // Fetch packs in parallel so the tab fills once instead of stuttering.
+            const [peer, universe, ret1y, ret5y] = await Promise.all([
+                fetchJsonCandidates([
+                    'data/realty_peer_compare.json',
+                    'examples/realty_peer_compare.sample.json',
+                ], 'Realty peer pack'),
+                fetchJsonCandidates([
+                    'data/realty_universe_screener.json',
+                ], 'Realty universe'),
+                fetchJsonCandidates([
+                    'data/realty_vs_nifty_realty_1y.json',
+                ], 'Realty 1Y returns'),
+                fetchJsonCandidates([
+                    'data/realty_vs_nifty_realty_5y.json',
+                ], 'Realty 5Y returns'),
+            ]);
+            realtyPeerData = peer;
+            realtyUniverse = universe;
+            realtyReturns1y = ret1y;
+            realtyReturns5y = ret5y;
+            const hasAny = !!(peer?.peer_table?.length || universe?.universe?.length);
+            realtyLoadState = hasAny ? 'ready' : 'error';
+            if (activeTab === 'realty-tab') renderRealtyTab();
         }
 
         function fmtRealtyNum(v, digits = 0) {
@@ -5019,7 +5083,13 @@
 
             const hasAny = (realtyPeerData?.peer_table?.length || realtyUniverse?.universe?.length);
             if (!hasAny) {
-                body.innerHTML = `<tr><td colspan="11" class="px-4 py-12 text-center text-[#6b5d50]">No realty data. Add <code>data/realty_peer_compare.json</code> / universe files.</td></tr>`;
+                if (realtyLoadState === 'loading' || realtyLoadState === 'idle') {
+                    body.innerHTML = `<tr><td colspan="11" class="px-4 py-12 text-center text-[#6b5d50]">Loading realty packs…</td></tr>`;
+                    if (meta) meta.textContent = 'Loading…';
+                    ensureRealtyDataLoaded();
+                    return;
+                }
+                body.innerHTML = `<tr><td colspan="11" class="px-4 py-12 text-center text-[#6b5d50]">No realty data. Check R2/public JSON or <code>data/realty_peer_compare.json</code>.</td></tr>`;
                 if (meta) meta.textContent = 'Missing realty data';
                 return;
             }
@@ -6326,6 +6396,17 @@
             document.addEventListener('keydown', e => {
                 if (e.key === 'Escape' && drDrawerOpen) closeDrDrawer();
             });
+            window.addEventListener('hashchange', () => {
+                const fromHash = normalizeTabId(location.hash);
+                if (fromHash && fromHash !== activeTab) switchTab(fromHash, { persist: true });
+            });
+
+            // Restore Realty (or any tab) across refresh via #hash / localStorage.
+            const initialTab = resolveInitialTabId();
+            switchTab(initialTab, { persist: true });
+
+            // Start Realty packs immediately (R2) so the tab is ready when opened.
+            const realtyReady = ensureRealtyDataLoaded();
             await loadCacheIndex();
             if (cacheIndex.size) {
                 writeToConsole(`Cache index loaded: ${cacheIndex.size.toLocaleString()} symbols ready for charts.`, "success");
@@ -6340,7 +6421,7 @@
             await loadFiiDii();
             await loadResearchFeeds();
             await loadResearchArticles();
-            await loadRealtyPeerCompare();
+            await realtyReady;
             await fetchLocalJSON();
             // Seed pipeline from existing Keep list (watch stage) if empty slot.
             Object.keys(drKeepChoices).forEach(sym => {
@@ -6350,8 +6431,8 @@
             });
             evaluatePipelineAlerts();
             renderAlertsBell();
-            renderHomeTab();
-            if (activeTab === 'realty-tab') renderRealtyTab();
+            // Re-render the restored tab with fully loaded data.
+            switchTab(activeTab, { persist: false });
             lucide.createIcons();
         }
     </script>
