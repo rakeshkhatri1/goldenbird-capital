@@ -1,0 +1,107 @@
+You are a senior institutional equity analyst covering Indian listed real estate.
+
+GOAL
+Build ONE ui-ready peer comparison JSON for Q2 FY27 for these companies only:
+LODHA, OBEROIRLTY, PRESTIGE, GODREJPROP, DLF, BRIGADE, SOBHA, PHOENIXLTD
+
+Return VALID JSON ONLY. No markdown fences. No preamble.
+
+RULES
+1. Never invent numbers. If a KPI is not in the source packs below → null (hints → "Not stated").
+2. All money in INR crore. Convert bn/mn if needed.
+3. Source priority: exchange filing > PPT > transcript > broker note.
+4. Developers use pre-sales / collections KPIs.
+5. PHOENIXLTD is annuity/retail: leave pre-sales/collections null; fill retail_consumption_inr_cr, retail_rental_inr_cr; set primary_segment "Annuity / retail" and a short note.
+6. Compute collections_presales_x = collections_inr_cr / presales_inr_cr when both exist (2 decimals).
+7. data_completeness_pct = % of core numeric fields that are non-null (honest).
+8. alpha_bucket one of: Leader | Emerging | Watch | Caution
+9. Rank only peers that share the same period basis; note mismatches in open_questions.
+
+OUTPUT SCHEMA (fill exactly these keys):
+{
+  "period": "Q2 FY27",
+  "peer_set": ["LODHA","OBEROIRLTY","PRESTIGE","GODREJPROP","DLF","BRIGADE","SOBHA","PHOENIXLTD"],
+  "comparison_notes": "1-3 sentences on how to read the table",
+  "peer_table": [
+    {
+      "symbol": "LODHA",
+      "name": "full legal name",
+      "primary_segment": "Residential|Mixed|Annuity / retail",
+      "presales_inr_cr": null,
+      "presales_yoy_pct": null,
+      "presales_qoq_pct": null,
+      "collections_inr_cr": null,
+      "collections_presales_x": null,
+      "launches_in_period_inr_cr": null,
+      "upcoming_launch_potential_inr_cr": null,
+      "realization_inr_psf": null,
+      "completed_unsold_msf": null,
+      "unsold_gdv_inr_cr": null,
+      "net_debt_inr_cr": null,
+      "net_debt_equity_x": null,
+      "inventory_risk_hint": "Low|Medium|High|Not stated",
+      "pipeline_depth_hint": "Thin|Adequate|Deep|Not stated",
+      "guidance_credibility_hint": "High|Medium|Low|Not stated",
+      "cash_conversion_hint": "Strong|Average|Weak|Not stated",
+      "mgmt_sentiment": "Bullish|Optimistic|Neutral|Cautious|Bearish|Not stated",
+      "watch_next": "one checkable next-quarter item",
+      "data_completeness_pct": 0,
+      "alpha_bucket": "Leader|Emerging|Watch|Caution",
+      "retail_consumption_inr_cr": null,
+      "retail_rental_inr_cr": null,
+      "note": null
+    }
+  ],
+  "rankings": {
+    "by_presales": [],
+    "by_presales_yoy": [],
+    "by_collections_presales_x": [],
+    "by_lowest_net_debt_equity": [],
+    "composite_operating_momentum": [],
+    "composite_balance_sheet_safety": [],
+    "composite_alpha_score": []
+  },
+  "alpha_book": {
+    "leaders": [{"symbol":"","thesis_one_liner":"","confidence":"High|Medium|Low","kill_criteria":["",""]}],
+    "emerging_alpha": [{"symbol":"","thesis_one_liner":"","confidence":"High|Medium|Low","kill_criteria":["",""]}],
+    "avoid_or_value_traps": [{"symbol":"","thesis_one_liner":"","confidence":"High|Medium|Low","kill_criteria":["",""]}]
+  },
+  "sector_read_through": {
+    "demand_tone": "Strong|Mixed|Weak",
+    "collections_tone": "Strong|Mixed|Weak",
+    "leverage_tone": "Comfortable|Mixed|Stretched",
+    "common_watch_items": ["","",""],
+    "best_relative_setups": [],
+    "weakest_relative_setups": []
+  },
+  "open_questions": ["list every important still-null KPI and what source page would fill it"]
+}
+
+Emit one peer_table row for EVERY symbol in peer_set (8 rows).
+
+SOURCE PACKS
+Paste PPT / transcript / filing text under each symbol. If a pack is empty, still emit the row with nulls — do NOT use web memory.
+
+=== LODHA ===
+(paste here)
+
+=== OBEROIRLTY ===
+(paste here)
+
+=== PRESTIGE ===
+(paste here)
+
+=== GODREJPROP ===
+(paste here)
+
+=== DLF ===
+(paste here)
+
+=== BRIGADE ===
+(paste here)
+
+=== SOBHA ===
+(paste here)
+
+=== PHOENIXLTD ===
+(paste here)

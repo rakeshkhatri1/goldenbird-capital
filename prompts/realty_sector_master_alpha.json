@@ -1,0 +1,37 @@
+{
+  "name": "realty_sector_master_alpha",
+  "version": 1,
+  "description": "Master prompt: per-company realty KPI matrices → peer table → alpha/winner ranking. UI reads peer_table + company_matrices.",
+  "prompt_template": "You are a senior institutional equity analyst covering Indian listed real estate (residential developers, mixed developers, commercial/annuity platforms, and REITs if present).\n\nGOAL\n1) Build a forensic, comparable KPI matrix for EACH company in the universe.\n2) Put all companies on ONE peer table with identical fields (ui-ready).\n3) Rank for relative alpha: who is set up to win over the next 2–4 quarters, and why — with falsifiers.\n\nUNIVERSE\nPeriod focus: {{PERIOD}}\nCompanies: {{PEER_SET}}\nOptional benchmark / index context: {{BENCHMARK_NOTE}}\n\nINPUT\n---\n{{COMPANY_SOURCE_PACKS}}\n---\nLabel each pack by symbol. Sources: transcript, PPT, exchange filing, broker (lowest priority).\nIf a pack is empty or missing, still emit the peer row with nulls and set data_completeness_pct honestly — do NOT use web memory.\n\nGLOBAL RULES\n1. Never invent numbers. Missing -> null / \"Not stated\".\n2. Money values in INR crore. Convert bn/mn; note in unit_note.\n3. Conflict hierarchy: exchange_filing > ppt > transcript > broker.\n4. Non-null KPIs include period_basis, quote, source_type when possible.\n5. Computed ratios: source_type=computed + formula in note.\n6. Never conflate unsold_gdv vs completed_unsold vs upcoming_launch_potential vs total_pipeline_gdv.\n7. Dual KPI tracks: (A) developers → presales_*/collections_*; (B) annuity/retail (e.g. PHOENIXLTD) → retail_consumption_inr_cr, retail_rental_inr_cr, consumption_yoy_pct, nd_ebitda_x — leave residential fields null and set primary_segment + note.\n8. Prefer same period_basis across peers for ranking; exclude mismatches from that rank and log.\n9. Target ≥70% data_completeness_pct per developer when PPT+transcript are provided; list every still-null KPI in open_questions with the source page you would need.\n10. Output VALID JSON ONLY matching master_output_schema.\n\nAlso fill ui_peer_rows: one flat row per company with ALL compare fields the UI table needs (summary + detail columns). Mirror peer_table but include extra detail fields listed in ui_table_spec.\n\nReturn master_output_schema JSON only.",
+  "ui_table_spec": {
+    "summary_columns": [
+      "symbol", "name", "presales_inr_cr", "presales_yoy_pct", "collections_inr_cr", "collections_presales_x",
+      "net_debt_inr_cr", "net_debt_equity_x", "completed_unsold_msf", "inventory_risk_hint",
+      "cash_conversion_hint", "guidance_credibility_hint", "alpha_bucket", "watch_next"
+    ],
+    "detail_column_groups": {
+      "Demand": ["presales_inr_cr", "presales_yoy_pct", "presales_qoq_pct", "presales_area", "presales_mix_note"],
+      "Cash": ["collections_inr_cr", "collections_presales_x", "ocf_inr_cr", "cash_conversion_hint"],
+      "Supply": ["launches_in_period_inr_cr", "upcoming_launch_potential_inr_cr", "pipeline_depth_hint"],
+      "Pricing": ["realization_inr_psf"],
+      "Inventory": ["completed_unsold_msf", "unsold_gdv_inr_cr", "inventory_risk_hint"],
+      "Balance sheet": ["net_debt_inr_cr", "net_debt_equity_x", "net_debt_ebitda_x", "cash_inr_cr"],
+      "P&L": ["revenue_inr_cr", "ebitda_inr_cr", "ebitda_margin_pct", "pat_inr_cr", "pat_yoy_pct"],
+      "Quality": ["mgmt_sentiment", "guidance_credibility_hint", "data_completeness_pct", "alpha_bucket", "watch_next"]
+    }
+  },
+  "placeholders": {
+    "PERIOD": "e.g. Q2 FY27",
+    "PEER_SET": "Prefer full Screener Realty mcap>=500 list from data/realty_universe_screener.json (or prompts/realty_peer_table_DENSE.txt)",
+    "BENCHMARK_NOTE": "optional Nifty Realty / sector context",
+    "COMPANY_SOURCE_PACKS": "Labeled packs per symbol"
+  },
+  "forward_fields": [
+    "mgmt_summary",
+    "mgmt_guidance",
+    "mgmt_history",
+    "forward_2q_commentary",
+    "projections",
+    "consensus"
+  ]
+}

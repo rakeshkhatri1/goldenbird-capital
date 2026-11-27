@@ -12,6 +12,8 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=Outfit:wght@400;500;600;700;800&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Optional overrides: dataBaseUrl for R2/CDN (see site/config.js) -->
+    <script src="config.js"></script>
     
     <script>
         tailwind.config = {
@@ -297,6 +299,7 @@
                 <button onclick="switchTab('deep-research-tab')" id="btn-deep-research-tab" class="text-[#5c4f44] hover:text-[#1a1410] font-semibold text-sm transition-all whitespace-nowrap px-4">Research</button>
                 <button onclick="switchTab('pipeline-tab')" id="btn-pipeline-tab" class="text-[#5c4f44] hover:text-[#1a1410] font-semibold text-sm transition-all whitespace-nowrap px-4">Pipeline</button>
                 <button onclick="switchTab('concall-tab')" id="btn-concall-tab" class="text-[#5c4f44] hover:text-[#1a1410] font-semibold text-sm transition-all whitespace-nowrap px-4">Concalls</button>
+                <button onclick="switchTab('realty-tab')" id="btn-realty-tab" class="text-[#5c4f44] hover:text-[#1a1410] font-semibold text-sm transition-all whitespace-nowrap px-4">Realty</button>
             </nav>
 
             <!-- Home: Nifty landing -->
@@ -1014,6 +1017,120 @@
                 </aside>
             </div>
 
+            <!-- Tab: Realty peer compare -->
+            <div id="realty-tab" class="tab-content hidden flex-1 flex flex-col gap-5 min-h-0 overflow-y-auto pb-4">
+                <!-- Sector strip -->
+                <div class="reader-panel p-5 sm:p-7">
+                    <div class="max-w-3xl">
+                        <p class="text-sm font-mono uppercase tracking-[0.14em] text-[#c7921a]">Realty dashboard</p>
+                        <h3 class="font-sans text-3xl font-semibold text-[#1a1410] mt-2 tracking-normal">Sector · peers · index</h3>
+                        <p class="text-base text-[#5c4f44] mt-2 leading-relaxed" id="realty-meta">Q2 FY27 · click a row for management / forward detail</p>
+                    </div>
+                    <div id="realty-strip-stats" class="mt-6 grid gap-4" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));"></div>
+                    <div class="mt-6">
+                        <p class="text-sm font-semibold text-[#1a1410]">Sector watch items</p>
+                        <ul id="realty-sector-chips" class="mt-3 space-y-2 text-sm text-[#5c4f44] leading-relaxed list-none"></ul>
+                    </div>
+                    <p id="realty-data-gaps" class="mt-4 text-sm text-[#8a5a1a] bg-[#f7ecd4] border border-[#e6d3a8] rounded-xl px-4 py-3 leading-relaxed hidden"></p>
+                    <div id="realty-alpha-cards" class="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-6"></div>
+                </div>
+
+                <!-- Index vs rest -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                    <div class="reader-panel p-5 sm:p-6">
+                        <p class="text-sm font-mono uppercase tracking-wider text-[#6b5d50]">Nifty Realty · 10 members</p>
+                        <p class="text-sm text-[#6b5d50] mt-1">5Y CAGR vs index (~+14.5%)</p>
+                        <div id="realty-index-panel" class="mt-4 space-y-2 max-h-72 overflow-y-auto"></div>
+                    </div>
+                    <div class="reader-panel p-5 sm:p-6">
+                        <p class="text-sm font-mono uppercase tracking-wider text-[#6b5d50]">5Y outperformers · outside index</p>
+                        <p class="text-sm text-[#6b5d50] mt-1">Beat Nifty Realty on 5Y CAGR</p>
+                        <div id="realty-outperf-panel" class="mt-4 space-y-2 max-h-72 overflow-y-auto"></div>
+                    </div>
+                </div>
+
+                <!-- Filters + table + detail -->
+                <div class="grid grid-cols-1 xl:grid-cols-12 gap-5 flex-1 min-h-0">
+                    <div class="xl:col-span-8 reader-panel overflow-hidden flex flex-col min-h-[520px]">
+                        <div class="px-4 sm:px-5 py-4 border-b border-[#ddd2bf] space-y-3">
+                            <div class="flex flex-wrap items-center gap-3">
+                                <span class="text-sm font-semibold text-[#1a1410]">Peer table</span>
+                                <span id="realty-filter-count" class="text-sm text-[#6b5d50]"></span>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                            <select id="realty-filter-cap" onchange="renderRealtyTab()" class="bg-[#f7f2e8] border border-[#ddd2bf] rounded-lg px-3 py-2 text-sm text-[#1a1410] focus:outline-none">
+                                <option value="all">All caps</option>
+                                <option value="mega">Mega ≥₹50k cr</option>
+                                <option value="large">Large ₹10–50k</option>
+                                <option value="mid">Mid ₹2–10k</option>
+                                <option value="small">Small ₹0.5–2k</option>
+                            </select>
+                            <select id="realty-filter-type" onchange="renderRealtyTab()" class="bg-[#f7f2e8] border border-[#ddd2bf] rounded-lg px-3 py-2 text-sm text-[#1a1410] focus:outline-none">
+                                <option value="all">All types</option>
+                                <option value="developer">Developer / mixed</option>
+                                <option value="annuity">Annuity / retail</option>
+                                <option value="reit">REIT</option>
+                            </select>
+                            <select id="realty-filter-index" onchange="renderRealtyTab()" class="bg-[#f7f2e8] border border-[#ddd2bf] rounded-lg px-3 py-2 text-sm text-[#1a1410] focus:outline-none">
+                                <option value="all">Index: all</option>
+                                <option value="in">In Nifty Realty</option>
+                                <option value="out">Not in index</option>
+                            </select>
+                            <select id="realty-filter-vs5y" onchange="renderRealtyTab()" class="bg-[#f7f2e8] border border-[#ddd2bf] rounded-lg px-3 py-2 text-sm text-[#1a1410] focus:outline-none">
+                                <option value="all">5Y vs index: all</option>
+                                <option value="beat">Beat Realty 5Y</option>
+                                <option value="lag">Lag Realty 5Y</option>
+                                <option value="na">No 5Y data</option>
+                            </select>
+                            <select id="realty-filter-dense" onchange="renderRealtyTab()" class="bg-[#f7f2e8] border border-[#ddd2bf] rounded-lg px-3 py-2 text-sm text-[#1a1410] focus:outline-none">
+                                <option value="all">Pack: all universe</option>
+                                <option value="dense">Dense KPI pack only</option>
+                            </select>
+                            <select id="realty-sort" onchange="renderRealtyTab()"
+                                class="bg-[#f7f2e8] border border-[#ddd2bf] rounded-lg px-3 py-2 text-sm text-[#1a1410] focus:outline-none">
+                                <option value="mcap">Mcap ↓</option>
+                                <option value="alpha">Alpha score order</option>
+                                <option value="presales">Pre-sales ↓</option>
+                                <option value="cagr5y">5Y CAGR ↓</option>
+                                <option value="ret1y">1Y return ↓</option>
+                                <option value="coll_ps">Collections / pre-sales ↓</option>
+                                <option value="nde">Net debt / equity ↑</option>
+                                <option value="completeness">Data completeness ↓</option>
+                            </select>
+                            </div>
+                        </div>
+                        <div class="overflow-auto flex-1">
+                            <table class="w-full text-left text-base min-w-[1100px]">
+                                <thead class="sticky top-0 bg-[#f3efe6] text-xs font-semibold uppercase tracking-wider text-[#5c4f44] border-b border-[#ddd2bf]">
+                                    <tr>
+                                        <th class="px-4 py-3.5">Company</th>
+                                        <th class="px-4 py-3.5 text-right">Mcap</th>
+                                        <th class="px-4 py-3.5 text-right">Pre-sales / retail</th>
+                                        <th class="px-4 py-3.5 text-right">YoY</th>
+                                        <th class="px-4 py-3.5 text-right">Coll / rent</th>
+                                        <th class="px-4 py-3.5 text-right">ND/E</th>
+                                        <th class="px-4 py-3.5">Index</th>
+                                        <th class="px-4 py-3.5 text-right">1Y</th>
+                                        <th class="px-4 py-3.5 text-right">5Y CAGR</th>
+                                        <th class="px-4 py-3.5">Alpha</th>
+                                        <th class="px-4 py-3.5 text-right">Data %</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="realty-table-body" class="divide-y divide-[#eee4d4]"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <aside class="xl:col-span-4 article-rail p-5 sm:p-6 flex flex-col min-h-[520px]">
+                        <p class="gb-chip">Detail</p>
+                        <h4 class="font-display text-2xl font-extrabold text-[#f7f2e8] mt-3" id="realty-detail-symbol">Select a peer</h4>
+                        <p class="text-base text-[#b8a894] mt-2 leading-relaxed" id="realty-detail-name">Mgmt summary · guidance · history · forward · consensus</p>
+                        <div id="realty-detail-body" class="mt-5 space-y-4 text-base text-[#d8cbb8] flex-1 overflow-y-auto leading-relaxed">
+                            <p class="text-[#b8a894]">Loads dense pack + Screener universe (≥₹500 cr) + 1Y/5Y vs Nifty Realty.</p>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+
             <!-- Tab: Stage pipeline -->
             <div id="pipeline-tab" class="tab-content hidden flex-1 flex flex-col gap-4 min-h-0">
                 <div class="reader-panel p-5 sm:p-6">
@@ -1483,7 +1600,11 @@
         let selectedHomeArticleId = null;
         let currentPage = 1;
         const rowsPerPage = 100;
-        const GEMINI_API_BASE = 'http://127.0.0.1:8787';
+        const GB_CONFIG = Object.assign({
+            dataBaseUrl: '',
+            geminiApiBase: 'http://127.0.0.1:8787',
+        }, window.GOLDENBIRD_CONFIG || {});
+        const GEMINI_API_BASE = GB_CONFIG.geminiApiBase || 'http://127.0.0.1:8787';
         let sortedColumn = 'symbol';
         let sortAscending = true;
         let selectedSymbol = null;
@@ -1506,6 +1627,15 @@
         let concallIndex = new Map();
         let selectedDrSymbol = null;
         let selectedCcSymbol = null;
+        let selectedRealtySymbol = null;
+        let realtyPeerData = null;
+        let realtyUniverse = null;
+        let realtyReturns1y = null;
+        let realtyReturns5y = null;
+        const NIFTY_REALTY_SYMBOLS = new Set([
+            'DLF', 'LODHA', 'PHOENIXLTD', 'PRESTIGE', 'GODREJPROP',
+            'OBEROIRLTY', 'BRIGADE', 'ANANTRAJ', 'ABREL', 'SOBHA',
+        ]);
         let drDrawerOpen = false;
         const DR_KEEP_STORAGE_KEY = 'nse_engine_dr_keep_v1';
         const PIPELINE_STORAGE_KEY = 'nse_engine_pipeline_v1';
@@ -1671,8 +1801,24 @@
             return (stock || data[0]).symbol;
         }
 
+        /**
+         * Resolve a data path for local or hosted/CDN layouts.
+         * Local: data/foo.json
+         * Hosted with DATA_BASE_URL / GOLDENBIRD_CONFIG.dataBaseUrl → {base}/foo.json
+         */
+        function resolveDataPath(path) {
+            const base = String(GB_CONFIG.dataBaseUrl || '').replace(/\/$/, '');
+            if (!base) return path;
+            if (/^https?:\/\//i.test(path)) return path;
+            if (path.startsWith('examples/')) return path;
+            const trimmed = path.replace(/^data\//, '');
+            return `${base}/${trimmed}`;
+        }
+
         function cacheBustUrl(path) {
-            return `${path}?v=${Date.now()}`;
+            const resolved = resolveDataPath(path);
+            const sep = resolved.includes('?') ? '&' : '?';
+            return `${resolved}${sep}v=${Date.now()}`;
         }
 
         function valGapChipClass(gap) {
@@ -4525,7 +4671,7 @@
 
             const off = 'text-[#5c4f44] hover:text-[#1a1410] font-semibold text-sm transition-all whitespace-nowrap px-4';
             const on = 'tab-active font-semibold text-sm transition-all whitespace-nowrap px-4';
-            ['btn-home-tab', 'btn-sector-tab', 'btn-sector-compare-tab', 'btn-screener-tab', 'btn-business-updates-tab', 'btn-deep-research-tab', 'btn-pipeline-tab', 'btn-concall-tab']
+            ['btn-home-tab', 'btn-sector-tab', 'btn-sector-compare-tab', 'btn-screener-tab', 'btn-business-updates-tab', 'btn-deep-research-tab', 'btn-pipeline-tab', 'btn-concall-tab', 'btn-realty-tab']
                 .forEach(id => { const el = document.getElementById(id); if (el) el.className = off; });
 
             const btnMap = {
@@ -4537,6 +4683,7 @@
                 'deep-research-tab': 'btn-deep-research-tab',
                 'pipeline-tab': 'btn-pipeline-tab',
                 'concall-tab': 'btn-concall-tab',
+                'realty-tab': 'btn-realty-tab',
             };
             const activeBtn = document.getElementById(btnMap[tabId] || 'btn-home-tab');
             if (activeBtn) activeBtn.className = on;
@@ -4555,6 +4702,561 @@
                 renderDeepResearchTab();
             } else if (tabId === 'concall-tab') {
                 renderConcallScansTab();
+            } else if (tabId === 'realty-tab') {
+                renderRealtyTab();
+            }
+        }
+
+        async function loadRealtyPeerCompare() {
+            const paths = ['data/realty_peer_compare.json', 'examples/realty_peer_compare.sample.json'];
+            realtyPeerData = null;
+            for (const path of paths) {
+                try {
+                    const res = await fetch(cacheBustUrl(path));
+                    if (!res.ok) continue;
+                    realtyPeerData = await res.json();
+                    writeToConsole(`Realty peer pack loaded (${path}).`, 'success');
+                    break;
+                } catch (_) { /* try next */ }
+            }
+            try {
+                const u = await fetch(cacheBustUrl('data/realty_universe_screener.json'));
+                if (u.ok) realtyUniverse = await u.json();
+            } catch (_) { realtyUniverse = null; }
+            try {
+                const a = await fetch(cacheBustUrl('data/realty_vs_nifty_realty_1y.json'));
+                if (a.ok) realtyReturns1y = await a.json();
+            } catch (_) { realtyReturns1y = null; }
+            try {
+                const b = await fetch(cacheBustUrl('data/realty_vs_nifty_realty_5y.json'));
+                if (b.ok) realtyReturns5y = await b.json();
+            } catch (_) { realtyReturns5y = null; }
+        }
+
+        function fmtRealtyNum(v, digits = 0) {
+            if (v == null || v === '' || Number.isNaN(Number(v))) return '—';
+            const n = Number(v);
+            return n.toLocaleString('en-IN', { maximumFractionDigits: digits, minimumFractionDigits: digits });
+        }
+
+        function fmtRealtyPct(v) {
+            if (v == null || Number.isNaN(Number(v))) return '—';
+            const n = Number(v);
+            const sign = n > 0 ? '+' : '';
+            return `${sign}${n.toFixed(1)}%`;
+        }
+
+        function realtyHintChip(text, tone = 'neutral', surface = 'dark') {
+            const t = String(text || '—');
+            const dark = {
+                good: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
+                bad: 'bg-rose-500/15 text-rose-300 border-rose-500/30',
+                warn: 'bg-amber-500/15 text-amber-200 border-amber-500/30',
+                neutral: 'bg-white/5 text-[#b8a894] border-white/10',
+                light: 'bg-white/10 text-[#d8cbb8] border-white/15',
+            };
+            const light = {
+                good: 'bg-emerald-100 text-emerald-900 border-emerald-300',
+                bad: 'bg-rose-100 text-rose-900 border-rose-300',
+                warn: 'bg-amber-100 text-amber-950 border-amber-300',
+                neutral: 'bg-[#efe8dc] text-[#3d342c] border-[#d9ceb8]',
+                light: 'bg-[#f7f2e8] text-[#5c4f44] border-[#ddd2bf]',
+            };
+            const map = surface === 'light' ? light : dark;
+            return `<span class="inline-flex px-2 py-0.5 rounded-md border text-xs font-semibold ${map[tone] || map.neutral}">${escapeHtml(t)}</span>`;
+        }
+
+        function realtyAlphaTone(bucket) {
+            const b = String(bucket || '').toLowerCase();
+            if (b.includes('leader')) return 'good';
+            if (b.includes('emerg')) return 'warn';
+            if (b.includes('caution') || b.includes('avoid')) return 'bad';
+            return 'neutral';
+        }
+
+        function isRealtyAnnuityRow(r) {
+            const seg = String(r?.primary_segment || '');
+            if (/REIT/i.test(seg)) return false;
+            return r?.presales_inr_cr == null && (r?.retail_consumption_inr_cr != null || r?.retail_rental_inr_cr != null
+                || /annuity|retail/i.test(String(r?.note || '')) || /annuity|retail/i.test(seg));
+        }
+
+        function realtyRowType(r) {
+            const seg = String(r?.primary_segment || '');
+            const name = String(r?.name || '');
+            if (/REIT/i.test(seg) || /REIT/i.test(name) || ['EMBASSY','MINDSPACE','BIRET','NXST','BAGMANE','KRT'].includes(r.symbol)) return 'reit';
+            if (isRealtyAnnuityRow(r) || /annuity|retail/i.test(seg)) return 'annuity';
+            return 'developer';
+        }
+
+        function realtyCapBucket(mcap) {
+            const m = Number(mcap);
+            if (!Number.isFinite(m)) return 'unknown';
+            if (m >= 50000) return 'mega';
+            if (m >= 10000) return 'large';
+            if (m >= 2000) return 'mid';
+            return 'small';
+        }
+
+        function realtyDemandCell(r) {
+            if (r.presales_inr_cr != null) {
+                return `<span class="font-mono text-[#1a1410]">${fmtRealtyNum(r.presales_inr_cr)}</span>`;
+            }
+            if (r.retail_consumption_inr_cr != null) {
+                return `<span class="font-mono text-[#1a1410]">${fmtRealtyNum(r.retail_consumption_inr_cr)}</span>
+                    <span class="block text-[9px] text-[#9a8b7a] font-sans">consumption</span>`;
+            }
+            if (r.retail_rental_inr_cr != null && realtyRowType(r) === 'reit') {
+                return `<span class="font-mono text-[#1a1410]">${fmtRealtyNum(r.retail_rental_inr_cr)}</span>
+                    <span class="block text-[9px] text-[#9a8b7a] font-sans">rental/NOI proxy</span>`;
+            }
+            return `<span class="text-[#9a8b7a]">—</span>`;
+        }
+
+        function realtyCashCell(r) {
+            if (r.collections_inr_cr != null) {
+                return `<span class="font-mono text-[#1a1410]">${fmtRealtyNum(r.collections_inr_cr)}</span>`;
+            }
+            if (r.retail_rental_inr_cr != null) {
+                return `<span class="font-mono text-[#1a1410]">${fmtRealtyNum(r.retail_rental_inr_cr)}</span>
+                    <span class="block text-[9px] text-[#9a8b7a] font-sans">rental</span>`;
+            }
+            return `<span class="text-[#9a8b7a]">—</span>`;
+        }
+
+        function buildRealtyReturnMaps() {
+            const map1 = {};
+            const map5 = {};
+            [...(realtyReturns1y?.outperformers || []), ...(realtyReturns1y?.underperformers || [])]
+                .forEach(r => { map1[r.symbol] = r; });
+            [...(realtyReturns5y?.outperformers || []), ...(realtyReturns5y?.underperformers || [])]
+                .forEach(r => { map5[r.symbol] = r; });
+            return { map1, map5 };
+        }
+
+        function buildRealtyDashboardRows() {
+            const { map1, map5 } = buildRealtyReturnMaps();
+            const peerBySym = Object.fromEntries((realtyPeerData?.peer_table || []).map(r => [r.symbol, r]));
+            const universe = realtyUniverse?.universe || [];
+            let base;
+            if (universe.length) {
+                base = universe.map(u => {
+                    const sym = String(u.symbol || '').toUpperCase();
+                    const peer = peerBySym[sym] || {};
+                    return {
+                        ...peer,
+                        symbol: sym,
+                        name: peer.name || u.name,
+                        mcap_inr_cr: peer.mcap_inr_cr ?? u.mcap_inr_cr,
+                        primary_segment: peer.primary_segment || (/REIT/i.test(u.name) ? 'REIT' : 'Mixed'),
+                        _dense: !!peerBySym[sym],
+                    };
+                });
+                // keep dense-only peers not in universe scrape
+                Object.keys(peerBySym).forEach(sym => {
+                    if (!base.find(r => r.symbol === sym)) {
+                        base.push({ ...peerBySym[sym], _dense: true });
+                    }
+                });
+            } else {
+                base = (realtyPeerData?.peer_table || []).map(r => ({ ...r, _dense: true }));
+            }
+            return base.map(r => {
+                const r1 = map1[r.symbol];
+                const r5 = map5[r.symbol];
+                const inIndex = NIFTY_REALTY_SYMBOLS.has(r.symbol);
+                const cagr = r5?.cagr;
+                const bench5 = realtyReturns5y?.nifty_realty_5y_cagr_pct;
+                let vs5 = 'na';
+                if (cagr != null && bench5 != null) vs5 = cagr > bench5 ? 'beat' : 'lag';
+                return {
+                    ...r,
+                    in_nifty_realty: inIndex,
+                    ret_1y: r1?.ret_1y ?? null,
+                    cagr_5y: cagr ?? null,
+                    total_5y: r5?.total ?? null,
+                    vs5y: vs5,
+                    alpha_5y_pp: r5?.alpha_cagr_pp ?? null,
+                };
+            });
+        }
+
+        function getSortedRealtyRows() {
+            let rows = buildRealtyDashboardRows();
+            const cap = document.getElementById('realty-filter-cap')?.value || 'all';
+            const typ = document.getElementById('realty-filter-type')?.value || 'all';
+            const idx = document.getElementById('realty-filter-index')?.value || 'all';
+            const vs5 = document.getElementById('realty-filter-vs5y')?.value || 'all';
+            const dense = document.getElementById('realty-filter-dense')?.value || 'all';
+            const sort = document.getElementById('realty-sort')?.value || 'mcap';
+
+            rows = rows.filter(r => {
+                if (dense === 'dense' && !r._dense) return false;
+                if (cap !== 'all' && realtyCapBucket(r.mcap_inr_cr) !== cap) return false;
+                if (typ !== 'all' && realtyRowType(r) !== typ) return false;
+                if (idx === 'in' && !r.in_nifty_realty) return false;
+                if (idx === 'out' && r.in_nifty_realty) return false;
+                if (vs5 !== 'all' && r.vs5y !== vs5) return false;
+                return true;
+            });
+
+            const alphaOrder = realtyPeerData?.rankings?.composite_alpha_score || [];
+            const alphaRank = Object.fromEntries(alphaOrder.map((s, i) => [s, i]));
+            rows.sort((a, b) => {
+                if (sort === 'presales') return (Number(b.presales_inr_cr) || -1e12) - (Number(a.presales_inr_cr) || -1e12);
+                if (sort === 'coll_ps') return (Number(b.collections_presales_x) || -1) - (Number(a.collections_presales_x) || -1);
+                if (sort === 'nde') {
+                    const av = a.net_debt_equity_x == null ? 99 : Number(a.net_debt_equity_x);
+                    const bv = b.net_debt_equity_x == null ? 99 : Number(b.net_debt_equity_x);
+                    return av - bv;
+                }
+                if (sort === 'completeness') return (Number(b.data_completeness_pct) || 0) - (Number(a.data_completeness_pct) || 0);
+                if (sort === 'cagr5y') return (Number(b.cagr_5y) || -999) - (Number(a.cagr_5y) || -999);
+                if (sort === 'ret1y') return (Number(b.ret_1y) || -999) - (Number(a.ret_1y) || -999);
+                if (sort === 'alpha') return (alphaRank[a.symbol] ?? 99) - (alphaRank[b.symbol] ?? 99);
+                return (Number(b.mcap_inr_cr) || 0) - (Number(a.mcap_inr_cr) || 0);
+            });
+            return rows;
+        }
+
+        function renderRealtyStrip() {
+            const host = document.getElementById('realty-strip-stats');
+            if (!host) return;
+            const all = buildRealtyDashboardRows();
+            const denseN = all.filter(r => r._dense).length;
+            const inN = all.filter(r => r.in_nifty_realty).length;
+            const beat5 = all.filter(r => r.vs5y === 'beat').length;
+            const sr = realtyPeerData?.sector_read_through || {};
+            const card = (label, value, sub) => `
+                <div class="rounded-2xl border border-[#ddd2bf] bg-[#f7f2e8] px-5 py-5 min-w-0">
+                    <p class="text-sm font-medium text-[#6b5d50] leading-snug">${escapeHtml(label)}</p>
+                    <p class="mt-3 font-mono text-3xl font-semibold text-[#1a1410] tabular-nums tracking-normal" style="font-variant-numeric: tabular-nums; letter-spacing: 0.02em;">${escapeHtml(String(value))}</p>
+                    ${sub ? `<p class="text-sm text-[#5c4f44] mt-3 leading-relaxed">${escapeHtml(sub)}</p>` : ''}
+                </div>`;
+            host.innerHTML = [
+                card('Period', realtyPeerData?.period || '—', `Demand tone: ${sr.demand_tone || '—'}`),
+                card('Nifty Realty · 1 year', fmtRealtyPct(realtyReturns1y?.nifty_realty_1y_pct), 'Price return'),
+                card('Nifty Realty · 5 year CAGR', fmtRealtyPct(realtyReturns5y?.nifty_realty_5y_cagr_pct), `Total return: ${fmtRealtyPct(realtyReturns5y?.nifty_realty_5y_total_pct)}`),
+                card('Universe size', String(all.length || '—'), 'Screener names with mcap ≥ ₹500 cr'),
+                card('In Nifty Realty index', String(inN), `Dense KPI pack filled for ${denseN} names`),
+                card('Beat Realty on 5Y', String(beat5), `Collections: ${sr.collections_tone || '—'} · Leverage: ${sr.leverage_tone || '—'}`),
+            ].join('');
+        }
+
+        function renderRealtyIndexPanels() {
+            const idxHost = document.getElementById('realty-index-panel');
+            const outHost = document.getElementById('realty-outperf-panel');
+            const all = buildRealtyDashboardRows();
+            if (idxHost) {
+                const members = all.filter(r => r.in_nifty_realty).sort((a, b) => (b.mcap_inr_cr || 0) - (a.mcap_inr_cr || 0));
+                idxHost.innerHTML = members.length ? members.map(r => {
+                    const vs = r.vs5y === 'beat' ? 'text-emerald-800' : (r.vs5y === 'lag' ? 'text-rose-800' : 'text-[#6b5d50]');
+                    const tag = r.vs5y === 'beat' ? 'Beat' : (r.vs5y === 'lag' ? 'Lag' : 'n/a');
+                    return `<button type="button" class="w-full flex items-center justify-between gap-3 rounded-xl border border-[#eee4d4] bg-white/60 px-3.5 py-3 hover:bg-[#f7f2e8] text-left" onclick="selectRealtyPeer('${escapeAttr(r.symbol)}')">
+                        <span>
+                            <span class="block text-base font-bold text-[#1a1410]">${escapeHtml(r.symbol)}</span>
+                            <span class="block text-sm text-[#6b5d50] mt-0.5 truncate max-w-[220px]">${escapeHtml(r.name || '')}</span>
+                        </span>
+                        <span class="text-right shrink-0">
+                            <span class="block font-mono text-base font-semibold ${vs}">${r.cagr_5y == null ? '—' : fmtRealtyPct(r.cagr_5y)}</span>
+                            <span class="block text-xs text-[#6b5d50] mt-0.5">${escapeHtml(tag)} vs index</span>
+                        </span>
+                    </button>`;
+                }).join('') : '<p class="text-[#6b5d50] text-sm">Load universe + 5Y file.</p>';
+            }
+            if (outHost) {
+                const outs = all.filter(r => !r.in_nifty_realty && r.vs5y === 'beat')
+                    .sort((a, b) => (b.cagr_5y || 0) - (a.cagr_5y || 0)).slice(0, 12);
+                outHost.innerHTML = outs.length ? outs.map(r => `
+                    <button type="button" class="w-full flex items-center justify-between gap-3 rounded-xl border border-[#eee4d4] bg-white/60 px-3.5 py-3 hover:bg-[#f7f2e8] text-left" onclick="selectRealtyPeer('${escapeAttr(r.symbol)}')">
+                        <span>
+                            <span class="block text-base font-bold text-[#1a1410]">${escapeHtml(r.symbol)}</span>
+                            <span class="block text-sm text-[#6b5d50] mt-0.5 truncate max-w-[220px]">${escapeHtml(r.name || '')}</span>
+                        </span>
+                        <span class="font-mono text-base font-semibold text-emerald-800 shrink-0">${fmtRealtyPct(r.cagr_5y)}</span>
+                    </button>`).join('') : '<p class="text-[#6b5d50] text-sm">No non-index 5Y outperformers loaded.</p>';
+            }
+        }
+
+        function renderRealtyTab() {
+            const body = document.getElementById('realty-table-body');
+            const meta = document.getElementById('realty-meta');
+            const chips = document.getElementById('realty-sector-chips');
+            const alphaHost = document.getElementById('realty-alpha-cards');
+            if (!body) return;
+
+            const hasAny = (realtyPeerData?.peer_table?.length || realtyUniverse?.universe?.length);
+            if (!hasAny) {
+                body.innerHTML = `<tr><td colspan="11" class="px-4 py-12 text-center text-[#6b5d50]">No realty data. Add <code>data/realty_peer_compare.json</code> / universe files.</td></tr>`;
+                if (meta) meta.textContent = 'Missing realty data';
+                return;
+            }
+
+            renderRealtyStrip();
+            renderRealtyIndexPanels();
+
+            const sr = realtyPeerData?.sector_read_through || {};
+            const denseRows = (realtyPeerData?.peer_table || []);
+            const avgComplete = denseRows.length
+                ? denseRows.reduce((s, r) => s + (Number(r.data_completeness_pct) || 0), 0) / denseRows.length
+                : 0;
+            if (meta) {
+                const uniN = realtyUniverse?.count || buildRealtyDashboardRows().length;
+                meta.innerHTML = [
+                    `<span class="inline-block mr-3 mb-1"><strong class="text-[#1a1410]">${escapeHtml(realtyPeerData?.period || '—')}</strong></span>`,
+                    `<span class="inline-block mr-3 mb-1">Dense pack: <strong class="text-[#1a1410]">${denseRows.length}</strong></span>`,
+                    `<span class="inline-block mr-3 mb-1">Universe: <strong class="text-[#1a1410]">${uniN}</strong></span>`,
+                    `<span class="inline-block mr-3 mb-1">Avg dense data: <strong class="text-[#1a1410]">${avgComplete.toFixed(0)}%</strong></span>`,
+                    `<span class="inline-block mb-1">Demand: <strong class="text-[#1a1410]">${escapeHtml(sr.demand_tone || '—')}</strong></span>`,
+                ].join('');
+            }
+            const gapsEl = document.getElementById('realty-data-gaps');
+            if (gapsEl) {
+                const qs = realtyPeerData?.open_questions || [];
+                const bits = [];
+                if (denseRows.length && denseRows.length < 20) bits.push(`Dense KPI pack has ${denseRows.length} names — filter “Dense KPI pack only” or expand via realty_peer_table_DENSE.txt.`);
+                qs.slice(0, 2).forEach(q => bits.push(q));
+                if (bits.length) { gapsEl.classList.remove('hidden'); gapsEl.textContent = bits.join(' · '); }
+                else { gapsEl.classList.add('hidden'); gapsEl.textContent = ''; }
+            }
+            if (chips) {
+                chips.innerHTML = (sr.common_watch_items || ['RERA / H2 launches', 'Collections vs P&L', 'ND/E discipline']).slice(0, 3).map(x =>
+                    `<li class="flex gap-2 items-start"><span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#c7921a] shrink-0"></span><span>${escapeHtml(x)}</span></li>`
+                ).join('');
+            }
+            if (alphaHost) {
+                const book = realtyPeerData?.alpha_book || {};
+                const blocks = [
+                    { title: 'Leaders', rows: book.leaders || [], tone: 'good', border: 'border-emerald-300' },
+                    { title: 'Emerging', rows: book.emerging_alpha || [], tone: 'warn', border: 'border-amber-300' },
+                    { title: 'Caution', rows: book.avoid_or_value_traps || [], tone: 'bad', border: 'border-rose-300' },
+                ];
+                alphaHost.innerHTML = blocks.map(block => `
+                    <div class="rounded-2xl border ${block.border} bg-white/70 p-4 sm:p-5">
+                        <p class="text-sm font-semibold uppercase tracking-wide text-[#3d342c]">${escapeHtml(block.title)}</p>
+                        <div class="mt-4 space-y-4">
+                            ${(block.rows.length ? block.rows : [{ symbol: '—', thesis_one_liner: 'None in this pack' }]).map(r => `
+                                <button type="button" class="w-full text-left" onclick="selectRealtyPeer('${escapeAttr(r.symbol || '')}')">
+                                    <div class="flex flex-wrap items-center gap-2">${realtyHintChip(r.symbol || '—', block.tone, 'light')}
+                                        <span class="text-sm text-[#6b5d50]">${escapeHtml(r.confidence || '')}</span>
+                                    </div>
+                                    <p class="text-sm text-[#1a1410] mt-2 leading-relaxed">${escapeHtml(r.thesis_one_liner || '')}</p>
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            const rows = getSortedRealtyRows();
+            const countEl = document.getElementById('realty-filter-count');
+            if (countEl) countEl.textContent = `${rows.length} shown`;
+            const bench5 = realtyReturns5y?.nifty_realty_5y_cagr_pct;
+            const bench1 = realtyReturns1y?.nifty_realty_1y_pct;
+
+            body.innerHTML = rows.length ? rows.map(r => {
+                const active = r.symbol === selectedRealtySymbol;
+                const yoyCls = Number(r.presales_yoy_pct) > 0 ? 'text-emerald-700' : (Number(r.presales_yoy_pct) < 0 ? 'text-red-700' : 'text-[#5c4f44]');
+                const complete = Number(r.data_completeness_pct);
+                const completeCls = complete >= 70 ? 'text-emerald-700' : (complete >= 50 ? 'text-amber-700' : 'text-rose-700');
+                const seg = realtyRowType(r) === 'reit' ? 'REIT' : (isRealtyAnnuityRow(r) ? 'Annuity / retail' : (r.primary_segment || ''));
+                const r1cls = r.ret_1y == null ? 'text-[#9a8b7a]' : (bench1 != null && r.ret_1y > bench1 ? 'text-emerald-700' : 'text-rose-700');
+                const r5cls = r.cagr_5y == null ? 'text-[#9a8b7a]' : (r.vs5y === 'beat' ? 'text-emerald-700' : 'text-rose-700');
+                return `
+                    <tr class="cursor-pointer ${active ? 'bg-[#f0c14b]/15' : 'hover:bg-[#f7f2e8]'} transition-colors" onclick="selectRealtyPeer('${escapeAttr(r.symbol)}')">
+                        <td class="px-4 py-3.5 align-top">
+                            <p class="text-base font-bold text-[#1a1410]">${escapeHtml(r.symbol)} ${r._dense ? '<span class="text-xs text-[#c7921a]">●</span>' : ''}</p>
+                            <p class="text-sm text-[#5c4f44] truncate max-w-[180px] mt-0.5">${escapeHtml(r.name || '')}</p>
+                            <p class="text-sm text-[#6b5d50] mt-1">${escapeHtml(seg)}</p>
+                        </td>
+                        <td class="px-4 py-3.5 align-top text-right font-mono text-[#1a1410] text-sm">${r.mcap_inr_cr == null ? '—' : fmtRealtyNum(r.mcap_inr_cr)}</td>
+                        <td class="px-4 py-3.5 align-top text-right text-sm">${realtyDemandCell(r)}</td>
+                        <td class="px-4 py-3.5 align-top text-right font-mono text-sm ${yoyCls}">${r.presales_yoy_pct == null ? '<span class="text-[#9a8b7a]">—</span>' : fmtRealtyPct(r.presales_yoy_pct)}</td>
+                        <td class="px-4 py-3.5 align-top text-right text-sm">${realtyCashCell(r)}</td>
+                        <td class="px-4 py-3.5 align-top text-right font-mono text-sm text-[#1a1410]">${r.net_debt_equity_x == null ? '<span class="text-[#9a8b7a]">—</span>' : Number(r.net_debt_equity_x).toFixed(2) + 'x'}</td>
+                        <td class="px-4 py-3.5 align-top">${r.in_nifty_realty ? realtyHintChip('Index', 'good', 'light') : realtyHintChip('—', 'light', 'light')}</td>
+                        <td class="px-4 py-3.5 align-top text-right font-mono text-sm font-semibold ${r1cls}">${r.ret_1y == null ? '—' : fmtRealtyPct(r.ret_1y)}</td>
+                        <td class="px-4 py-3.5 align-top text-right font-mono text-sm font-semibold ${r5cls}">${r.cagr_5y == null ? '—' : fmtRealtyPct(r.cagr_5y)}</td>
+                        <td class="px-4 py-3.5 align-top">${r.alpha_bucket ? realtyHintChip(r.alpha_bucket, realtyAlphaTone(r.alpha_bucket), 'light') : '<span class="text-[#9a8b7a] text-sm">—</span>'}</td>
+                        <td class="px-4 py-3.5 align-top text-right font-mono text-sm ${completeCls}">${Number.isFinite(complete) ? complete.toFixed(0) + '%' : '—'}</td>
+                    </tr>`;
+            }).join('') : `<tr><td colspan="11" class="px-4 py-10 text-center text-[#6b5d50] text-base">No rows match filters.</td></tr>`;
+
+            if (selectedRealtySymbol) populateRealtyDetail(selectedRealtySymbol);
+            else if (rows[0]) selectRealtyPeer(rows[0].symbol);
+        }
+
+        function selectRealtyPeer(sym) {
+            selectedRealtySymbol = String(sym || '').toUpperCase();
+            if (!selectedRealtySymbol || selectedRealtySymbol === '—') return;
+            populateRealtyDetail(selectedRealtySymbol);
+            renderRealtyTab();
+        }
+
+        function populateRealtyDetail(sym) {
+            const key = String(sym || '').toUpperCase();
+            const dash = buildRealtyDashboardRows().find(r => r.symbol === key);
+            const row = (realtyPeerData?.peer_table || []).find(r => r.symbol === key) || dash;
+            const matrix = (realtyPeerData?.company_matrices || []).find(r => r.symbol === key);
+            const bookHit = [
+                ...(realtyPeerData?.alpha_book?.leaders || []),
+                ...(realtyPeerData?.alpha_book?.emerging_alpha || []),
+                ...(realtyPeerData?.alpha_book?.avoid_or_value_traps || []),
+            ].find(r => r.symbol === key);
+
+            const symEl = document.getElementById('realty-detail-symbol');
+            const nameEl = document.getElementById('realty-detail-name');
+            const body = document.getElementById('realty-detail-body');
+            if (!row) {
+                if (symEl) symEl.textContent = 'Select a peer';
+                if (nameEl) nameEl.textContent = 'Click a row to open full KPI card';
+                if (body) body.innerHTML = '<p class="text-[#9a8b7a]">No row selected.</p>';
+                return;
+            }
+            if (symEl) symEl.textContent = row.symbol;
+            if (nameEl) nameEl.textContent = row.name || '';
+
+            const takeaways = matrix?.headline?.key_takeaways || [];
+            const kills = bookHit?.kill_criteria || [];
+            const thesis = bookHit?.thesis_one_liner || matrix?.headline?.one_line_thesis || row.mgmt_summary || row.watch_next || '';
+            const guidance = Array.isArray(row.mgmt_guidance) ? row.mgmt_guidance : [];
+            const history = Array.isArray(row.mgmt_history) ? row.mgmt_history : [];
+            const proj = row.projections || {};
+            const cons = row.consensus || {};
+            const projBits = [
+                proj.next_quarter ? ['Next Q', proj.next_quarter] : null,
+                proj.next_2q ? ['Next 2Q / H2', proj.next_2q] : null,
+                proj.fy_exit ? ['FY exit', proj.fy_exit] : null,
+            ].filter(Boolean);
+            const consHas = [cons.revenue_fy_inr_cr, cons.ebitda_fy_inr_cr, cons.pat_fy_inr_cr, cons.presales_fy_inr_cr, cons.target_price_inr]
+                .some(v => v != null);
+            const drow = dash || row;
+            const vs5label = drow.vs5y === 'beat' ? 'Beat Realty 5Y' : (drow.vs5y === 'lag' ? 'Lag Realty 5Y' : '5Y N/A');
+
+            if (body) {
+                body.innerHTML = `
+                    <div class="rounded-xl border border-white/10 px-3 py-2.5">
+                        <p class="text-xs font-mono uppercase tracking-wider text-[#f0c14b]">Market vs Nifty Realty</p>
+                        <div class="mt-2 grid grid-cols-2 gap-2 text-sm">
+                            <div><span class="text-[#9a8b7a]">Mcap</span><p class="font-mono text-[#f7f2e8]">₹${fmtRealtyNum(drow.mcap_inr_cr)} cr</p></div>
+                            <div><span class="text-[#9a8b7a]">Index</span><p class="text-[#f7f2e8]">${drow.in_nifty_realty ? 'Nifty Realty member' : 'Not in index'}</p></div>
+                            <div><span class="text-[#9a8b7a]">1Y</span><p class="font-mono text-[#f7f2e8]">${drow.ret_1y == null ? '—' : fmtRealtyPct(drow.ret_1y)}</p></div>
+                            <div><span class="text-[#9a8b7a]">5Y CAGR</span><p class="font-mono text-[#f7f2e8]">${drow.cagr_5y == null ? '—' : fmtRealtyPct(drow.cagr_5y)} <span class="text-[10px] text-[#9a8b7a]">${escapeHtml(vs5label)}</span></p></div>
+                        </div>
+                    </div>
+                    <div class="rounded-xl border border-white/10 px-3 py-2.5">
+                        <p class="text-xs font-mono uppercase tracking-wider text-[#f0c14b]">Thesis</p>
+                        <p class="mt-1 leading-relaxed">${escapeHtml(thesis || (row._dense === false || !row.mgmt_summary ? 'Universe row — dense KPI / mgmt pack not filled yet. Run realty_peer_table_DENSE.txt for this name.' : '—'))}</p>
+                        <div class="mt-2 flex flex-wrap gap-1">
+                            ${row.alpha_bucket ? realtyHintChip(row.alpha_bucket, realtyAlphaTone(row.alpha_bucket)) : ''}
+                            ${row.mgmt_sentiment ? realtyHintChip(row.mgmt_sentiment) : ''}
+                            ${row.data_completeness_pct != null ? realtyHintChip(`${fmtRealtyNum(row.data_completeness_pct, 0)}% data`) : ''}
+                            ${drow.in_nifty_realty ? realtyHintChip('Index', 'good') : realtyHintChip('Non-index')}
+                        </div>
+                    </div>
+                    ${row.mgmt_summary ? `
+                    <div class="rounded-xl border border-white/10 px-3 py-2.5">
+                        <p class="text-xs font-mono uppercase tracking-wider text-[#f0c14b]">Management summary</p>
+                        <p class="mt-1 leading-relaxed">${escapeHtml(row.mgmt_summary)}</p>
+                    </div>` : ''}
+                    ${guidance.length ? `
+                    <div class="rounded-xl border border-white/10 px-3 py-2.5">
+                        <p class="text-xs font-mono uppercase tracking-wider text-[#f0c14b]">Management guidance</p>
+                        <ul class="mt-2 space-y-2 list-none">${guidance.map(g => `
+                            <li class="border-b border-white/5 pb-2 last:border-0 last:pb-0">
+                                <p class="font-semibold text-[#f7f2e8]">${escapeHtml(g.metric || '—')}: <span class="font-mono text-[#f0c14b]">${escapeHtml(g.target || '—')}</span></p>
+                                <p class="text-sm text-[#9a8b7a]">${escapeHtml(g.timeline || '')}${g.source ? ' · ' + escapeHtml(g.source) : ''}</p>
+                            </li>`).join('')}
+                        </ul>
+                    </div>` : ''}
+                    ${history.length ? `
+                    <div class="rounded-xl border border-white/10 px-3 py-2.5">
+                        <p class="text-xs font-mono uppercase tracking-wider text-[#f0c14b]">Management history</p>
+                        <ul class="mt-2 space-y-2 list-none">${history.map(h => `
+                            <li class="flex flex-col gap-0.5">
+                                <div class="flex flex-wrap items-center gap-1.5">
+                                    ${realtyHintChip(h.period || '—')}
+                                    ${realtyHintChip(h.outcome || '—', /deliver|on track/i.test(h.outcome || '') ? 'good' : (/miss|soft/i.test(h.outcome || '') ? 'bad' : 'neutral'))}
+                                </div>
+                                <p class="text-sm text-[#d8cbb8]">${escapeHtml(h.claim || '')}</p>
+                                ${h.note ? `<p class="text-sm text-[#9a8b7a]">${escapeHtml(h.note)}</p>` : ''}
+                            </li>`).join('')}
+                        </ul>
+                    </div>` : ''}
+                    <div class="rounded-xl border border-white/10 px-3 py-2.5">
+                        <p class="text-xs font-mono uppercase tracking-wider text-[#f0c14b]">KPI matrix</p>
+                        <div class="mt-2 grid grid-cols-2 gap-2 text-sm">
+                            ${row.retail_consumption_inr_cr != null ? `
+                            <div><span class="text-[#9a8b7a]">Retail consumption</span><p class="font-mono text-[#f7f2e8]">₹${fmtRealtyNum(row.retail_consumption_inr_cr)} cr</p></div>
+                            <div><span class="text-[#9a8b7a]">Retail rental</span><p class="font-mono text-[#f7f2e8]">₹${fmtRealtyNum(row.retail_rental_inr_cr)} cr</p></div>` : `
+                            <div><span class="text-[#9a8b7a]">Pre-sales</span><p class="font-mono text-[#f7f2e8]">₹${fmtRealtyNum(row.presales_inr_cr)} cr · ${fmtRealtyPct(row.presales_yoy_pct)}</p></div>
+                            <div><span class="text-[#9a8b7a]">Collections</span><p class="font-mono text-[#f7f2e8]">₹${fmtRealtyNum(row.collections_inr_cr)} cr · ${row.collections_presales_x == null ? '—' : Number(row.collections_presales_x).toFixed(2) + 'x'}</p></div>`}
+                            <div><span class="text-[#9a8b7a]">Upcoming launches</span><p class="font-mono text-[#f7f2e8]">₹${fmtRealtyNum(row.upcoming_launch_potential_inr_cr)} cr</p></div>
+                            <div><span class="text-[#9a8b7a]">Realization</span><p class="font-mono text-[#f7f2e8]">${row.realization_inr_psf == null ? '—' : '₹' + fmtRealtyNum(row.realization_inr_psf) + '/sqft'}</p></div>
+                            <div><span class="text-[#9a8b7a]">Completed unsold</span><p class="font-mono text-[#f7f2e8]">${row.completed_unsold_msf == null ? '—' : row.completed_unsold_msf + ' msf'}</p></div>
+                            <div><span class="text-[#9a8b7a]">Unsold GDV</span><p class="font-mono text-[#f7f2e8]">₹${fmtRealtyNum(row.unsold_gdv_inr_cr)} cr</p></div>
+                            <div><span class="text-[#9a8b7a]">Net debt</span><p class="font-mono text-[#f7f2e8]">${row.net_debt_inr_cr == null ? '—' : (Number(row.net_debt_inr_cr) < 0 ? 'Cash ₹' + fmtRealtyNum(Math.abs(row.net_debt_inr_cr)) : '₹' + fmtRealtyNum(row.net_debt_inr_cr))} cr</p></div>
+                            <div><span class="text-[#9a8b7a]">ND / Equity</span><p class="font-mono text-[#f7f2e8]">${row.net_debt_equity_x == null ? '—' : Number(row.net_debt_equity_x).toFixed(2) + 'x'}</p></div>
+                        </div>
+                    </div>
+                    ${row.forward_2q_commentary || row.watch_next ? `
+                    <div class="rounded-xl border border-white/10 px-3 py-2.5">
+                        <p class="text-xs font-mono uppercase tracking-wider text-[#f0c14b]">Next 1–2 quarters</p>
+                        <p class="mt-1 leading-relaxed">${escapeHtml(row.forward_2q_commentary || row.watch_next || '')}</p>
+                        ${row.watch_next && row.forward_2q_commentary && row.watch_next !== row.forward_2q_commentary
+                            ? `<p class="mt-2 text-sm text-[#9a8b7a]"><span class="text-[#f0c14b]">Watch:</span> ${escapeHtml(row.watch_next)}</p>` : ''}
+                    </div>` : ''}
+                    ${projBits.length ? `
+                    <div class="rounded-xl border border-white/10 px-3 py-2.5">
+                        <p class="text-xs font-mono uppercase tracking-wider text-[#f0c14b]">Illustrative projections</p>
+                        ${proj.method ? `<p class="mt-1 text-sm text-[#9a8b7a]">${escapeHtml(proj.method)}</p>` : ''}
+                        <div class="mt-2 space-y-2">${projBits.map(([lbl, p]) => `
+                            <div class="rounded-lg bg-white/5 px-2.5 py-2">
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="text-[11px] font-bold text-[#f7f2e8]">${escapeHtml(lbl)} · ${escapeHtml(p.label || '')}</span>
+                                    ${realtyHintChip(p.confidence || 'Low', p.confidence === 'High' ? 'good' : (p.confidence === 'Medium' ? 'warn' : 'neutral'))}
+                                </div>
+                                <p class="mt-1 font-mono text-sm text-[#d8cbb8]">
+                                    ${p.presales_inr_cr != null ? `PS ₹${fmtRealtyNum(p.presales_inr_cr)} cr` : 'PS —'}
+                                    ${p.collections_inr_cr != null ? ` · Coll ₹${fmtRealtyNum(p.collections_inr_cr)} cr` : ''}
+                                    ${p.pat_inr_cr != null ? ` · PAT ₹${fmtRealtyNum(p.pat_inr_cr)} cr` : ''}
+                                    ${p.retail_consumption_inr_cr != null ? ` · Cons ₹${fmtRealtyNum(p.retail_consumption_inr_cr)} cr` : ''}
+                                </p>
+                            </div>`).join('')}
+                        </div>
+                        ${(proj.assumptions || []).length ? `<p class="mt-2 text-sm text-[#9a8b7a]">Assumptions: ${escapeHtml((proj.assumptions || []).join('; '))}</p>` : ''}
+                        <p class="mt-1 text-[10px] text-[#9a8b7a]">Not a forecast — confidence-tagged illustration only.</p>
+                    </div>` : ''}
+                    ${consHas || cons.note || (cons.source && cons.source !== 'Not stated') ? `
+                    <div class="rounded-xl border border-white/10 px-3 py-2.5">
+                        <p class="text-xs font-mono uppercase tracking-wider text-[#f0c14b]">Analyst consensus</p>
+                        <p class="mt-1 text-sm text-[#9a8b7a]">${escapeHtml(cons.source || '—')}${cons.as_of ? ' · ' + escapeHtml(cons.as_of) : ''}</p>
+                        <div class="mt-2 grid grid-cols-2 gap-2 text-sm">
+                            <div><span class="text-[#9a8b7a]">FY revenue</span><p class="font-mono text-[#f7f2e8]">₹${fmtRealtyNum(cons.revenue_fy_inr_cr)} cr</p></div>
+                            <div><span class="text-[#9a8b7a]">FY EBITDA</span><p class="font-mono text-[#f7f2e8]">₹${fmtRealtyNum(cons.ebitda_fy_inr_cr)} cr</p></div>
+                            <div><span class="text-[#9a8b7a]">FY PAT</span><p class="font-mono text-[#f7f2e8]">₹${fmtRealtyNum(cons.pat_fy_inr_cr)} cr</p></div>
+                            <div><span class="text-[#9a8b7a]">FY pre-sales</span><p class="font-mono text-[#f7f2e8]">₹${fmtRealtyNum(cons.presales_fy_inr_cr)} cr</p></div>
+                            <div><span class="text-[#9a8b7a]">Target</span><p class="font-mono text-[#f7f2e8]">${cons.target_price_inr == null ? '—' : '₹' + fmtRealtyNum(cons.target_price_inr)}</p></div>
+                            <div><span class="text-[#9a8b7a]">Ratings</span><p class="text-[#f7f2e8]">${escapeHtml(cons.rating_mix || '—')}</p></div>
+                        </div>
+                        ${cons.note ? `<p class="mt-2 text-sm text-[#9a8b7a]">${escapeHtml(cons.note)}</p>` : ''}
+                    </div>` : `
+                    <div class="rounded-xl border border-dashed border-white/10 px-3 py-2.5">
+                        <p class="text-[10px] font-mono uppercase tracking-wider text-[#9a8b7a]">Analyst consensus</p>
+                        <p class="mt-1 text-sm text-[#9a8b7a]">Not filled — add broker/Bloomberg estimates in the dense prompt output.</p>
+                    </div>`}
+                    ${takeaways.length ? `
+                    <div class="rounded-xl border border-white/10 px-3 py-2.5">
+                        <p class="text-xs font-mono uppercase tracking-wider text-[#f0c14b]">Takeaways</p>
+                        <ul class="mt-2 space-y-1.5 list-none">${takeaways.map(t => `<li class="flex gap-2"><span class="text-[#f0c14b]">•</span><span>${escapeHtml(t)}</span></li>`).join('')}</ul>
+                    </div>` : ''}
+                    ${kills.length ? `
+                    <div class="rounded-xl border border-white/10 px-3 py-2.5">
+                        <p class="text-xs font-mono uppercase tracking-wider text-[#f0c14b]">Kill criteria</p>
+                        <ul class="mt-2 space-y-1.5 list-none">${kills.map(t => `<li class="flex gap-2"><span class="text-rose-300">•</span><span>${escapeHtml(t)}</span></li>`).join('')}</ul>
+                    </div>` : ''}
+                    ${row.note ? `<p class="text-sm text-[#9a8b7a]">${escapeHtml(row.note)}</p>` : ''}
+                `;
             }
         }
 
@@ -5606,6 +6308,7 @@
             await loadFiiDii();
             await loadResearchFeeds();
             await loadResearchArticles();
+            await loadRealtyPeerCompare();
             await fetchLocalJSON();
             // Seed pipeline from existing Keep list (watch stage) if empty slot.
             Object.keys(drKeepChoices).forEach(sym => {

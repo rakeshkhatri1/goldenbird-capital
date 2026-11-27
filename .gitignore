@@ -3,6 +3,14 @@
 .env.*
 !.env.example
 
+# Build / deploy artifacts
+_site/
+dist/
+*.egg-info/
+.coverage
+htmlcov/
+.ruff_cache/
+
 # Python
 .venv/
 __pycache__/

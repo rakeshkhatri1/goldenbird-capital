@@ -1,0 +1,367 @@
+{
+  "period": "Q2 FY27",
+  "peer_set": [
+    "LODHA",
+    "OBEROIRLTY",
+    "PRESTIGE",
+    "GODREJPROP",
+    "DLF",
+    "BRIGADE",
+    "SOBHA",
+    "PHOENIXLTD"
+  ],
+  "comparison_notes": "Developer peers ranked on Q2 FY27 operating KPIs. Phoenix is annuity/retail — treat separately from residential pre-sales ranks. Oberoi collections/presales 0.25x reflects launch booking spike vs collection lag.",
+  "peer_table": [
+    {
+      "symbol": "LODHA",
+      "name": "Lodha Developers Limited",
+      "primary_segment": "Residential",
+      "presales_inr_cr": 5037,
+      "presales_yoy_pct": 10.0,
+      "presales_qoq_pct": null,
+      "collections_inr_cr": 3450,
+      "collections_presales_x": 0.68,
+      "launches_in_period_inr_cr": null,
+      "upcoming_launch_potential_inr_cr": 20000,
+      "realization_inr_psf": null,
+      "completed_unsold_msf": 3.9,
+      "unsold_gdv_inr_cr": 200000,
+      "net_debt_inr_cr": 5279,
+      "net_debt_equity_x": 0.21,
+      "inventory_risk_hint": "Medium",
+      "pipeline_depth_hint": "Deep",
+      "guidance_credibility_hint": "High",
+      "cash_conversion_hint": "Average",
+      "mgmt_sentiment": "Bullish",
+      "watch_next": "Hit ₹6–7k cr pre-sales in Q3/Q4 + ~₹1.5k cr DC land in Q4.",
+      "data_completeness_pct": 72.7,
+      "alpha_bucket": "Leader"
+    },
+    {
+      "symbol": "OBEROIRLTY",
+      "name": "Oberoi Realty Limited",
+      "primary_segment": "Residential",
+      "presales_inr_cr": 9149.7,
+      "presales_yoy_pct": 604.4,
+      "presales_qoq_pct": 771.4,
+      "collections_inr_cr": 2277,
+      "collections_presales_x": 0.25,
+      "launches_in_period_inr_cr": null,
+      "upcoming_launch_potential_inr_cr": 7500,
+      "realization_inr_psf": null,
+      "completed_unsold_msf": null,
+      "unsold_gdv_inr_cr": null,
+      "net_debt_inr_cr": null,
+      "net_debt_equity_x": 0.14,
+      "inventory_risk_hint": "Not stated",
+      "pipeline_depth_hint": "Adequate",
+      "guidance_credibility_hint": "Not stated",
+      "cash_conversion_hint": "Average",
+      "mgmt_sentiment": "Optimistic",
+      "watch_next": "360 North Phase 2 approvals/court clearance + post-launch booking pace.",
+      "data_completeness_pct": 54.5,
+      "alpha_bucket": "Watch"
+    },
+    {
+      "symbol": "PRESTIGE",
+      "name": "Prestige Estates Projects Limited",
+      "primary_segment": "Mixed",
+      "presales_inr_cr": 7225,
+      "presales_yoy_pct": 20.0,
+      "presales_qoq_pct": null,
+      "collections_inr_cr": 5294.1,
+      "collections_presales_x": 0.73,
+      "launches_in_period_inr_cr": 4020,
+      "upcoming_launch_potential_inr_cr": 46584,
+      "realization_inr_psf": 12375,
+      "completed_unsold_msf": null,
+      "unsold_gdv_inr_cr": null,
+      "net_debt_inr_cr": null,
+      "net_debt_equity_x": null,
+      "inventory_risk_hint": "Not stated",
+      "pipeline_depth_hint": "Deep",
+      "guidance_credibility_hint": "High",
+      "cash_conversion_hint": "Strong",
+      "mgmt_sentiment": "Optimistic",
+      "watch_next": "RERA pace for ~₹46.6k cr pipeline + ₹36k cr FY27 pre-sales target.",
+      "data_completeness_pct": 54.5,
+      "alpha_bucket": "Leader"
+    },
+    {
+      "symbol": "GODREJPROP",
+      "name": "Godrej Properties Limited",
+      "primary_segment": "Residential",
+      "presales_inr_cr": 8008,
+      "presales_yoy_pct": -6.0,
+      "presales_qoq_pct": -7.0,
+      "collections_inr_cr": 5318,
+      "collections_presales_x": 0.66,
+      "launches_in_period_inr_cr": 5500,
+      "upcoming_launch_potential_inr_cr": 22500,
+      "realization_inr_psf": null,
+      "completed_unsold_msf": null,
+      "unsold_gdv_inr_cr": null,
+      "net_debt_inr_cr": 7908,
+      "net_debt_equity_x": 0.41,
+      "inventory_risk_hint": "Not stated",
+      "pipeline_depth_hint": "Deep",
+      "guidance_credibility_hint": "High",
+      "cash_conversion_hint": "Average",
+      "mgmt_sentiment": "Bullish",
+      "watch_next": "Deliver ₹22.5–25k cr H2 bookings + stabilize margin/PAT.",
+      "data_completeness_pct": 63.6,
+      "alpha_bucket": "Caution"
+    },
+    {
+      "symbol": "DLF",
+      "name": "DLF Limited",
+      "primary_segment": "Mixed",
+      "presales_inr_cr": 3800,
+      "presales_yoy_pct": -12.0,
+      "presales_qoq_pct": 480.0,
+      "collections_inr_cr": 2780,
+      "collections_presales_x": 0.73,
+      "launches_in_period_inr_cr": null,
+      "upcoming_launch_potential_inr_cr": 58230,
+      "realization_inr_psf": null,
+      "completed_unsold_msf": null,
+      "unsold_gdv_inr_cr": null,
+      "net_debt_inr_cr": -15084,
+      "net_debt_equity_x": null,
+      "inventory_risk_hint": "Not stated",
+      "pipeline_depth_hint": "Deep",
+      "guidance_credibility_hint": "High",
+      "cash_conversion_hint": "Strong",
+      "mgmt_sentiment": "Bullish",
+      "watch_next": "H2 luxury launches + FY28 revenue recognition inflection.",
+      "data_completeness_pct": 54.5,
+      "alpha_bucket": "Leader"
+    },
+    {
+      "symbol": "BRIGADE",
+      "name": "Brigade Enterprises Limited",
+      "primary_segment": "Mixed",
+      "presales_inr_cr": 1827,
+      "presales_yoy_pct": -10.0,
+      "presales_qoq_pct": 72.0,
+      "collections_inr_cr": 1633,
+      "collections_presales_x": 0.89,
+      "launches_in_period_inr_cr": null,
+      "upcoming_launch_potential_inr_cr": 7600,
+      "realization_inr_psf": 13841,
+      "completed_unsold_msf": null,
+      "unsold_gdv_inr_cr": null,
+      "net_debt_inr_cr": 2765,
+      "net_debt_equity_x": 0.31,
+      "inventory_risk_hint": "Not stated",
+      "pipeline_depth_hint": "Adequate",
+      "guidance_credibility_hint": "Medium",
+      "cash_conversion_hint": "Strong",
+      "mgmt_sentiment": "Optimistic",
+      "watch_next": "~₹6.1k cr H2 pre-sales catch-up; avoid BLR/Chennai launch slips.",
+      "data_completeness_pct": 63.6,
+      "alpha_bucket": "Caution"
+    },
+    {
+      "symbol": "SOBHA",
+      "name": "Sobha Limited",
+      "primary_segment": "Residential",
+      "presales_inr_cr": 2206,
+      "presales_yoy_pct": 16.0,
+      "presales_qoq_pct": null,
+      "collections_inr_cr": 2084,
+      "collections_presales_x": 0.94,
+      "launches_in_period_inr_cr": null,
+      "upcoming_launch_potential_inr_cr": 18000,
+      "realization_inr_psf": 15522,
+      "completed_unsold_msf": null,
+      "unsold_gdv_inr_cr": null,
+      "net_debt_inr_cr": -340,
+      "net_debt_equity_x": -0.07,
+      "inventory_risk_hint": "Not stated",
+      "pipeline_depth_hint": "Deep",
+      "guidance_credibility_hint": "Medium",
+      "cash_conversion_hint": "Strong",
+      "mgmt_sentiment": "Bullish",
+      "watch_next": "Convert bookings into P&L; H2 EBITDA >15%.",
+      "data_completeness_pct": 63.6,
+      "alpha_bucket": "Emerging"
+    },
+    {
+      "symbol": "PHOENIXLTD",
+      "name": "The Phoenix Mills Limited",
+      "primary_segment": "Mixed",
+      "presales_inr_cr": null,
+      "presales_yoy_pct": null,
+      "presales_qoq_pct": null,
+      "collections_inr_cr": null,
+      "collections_presales_x": null,
+      "launches_in_period_inr_cr": null,
+      "upcoming_launch_potential_inr_cr": null,
+      "realization_inr_psf": null,
+      "completed_unsold_msf": null,
+      "unsold_gdv_inr_cr": null,
+      "net_debt_inr_cr": 3479,
+      "net_debt_equity_x": null,
+      "inventory_risk_hint": "Not stated",
+      "pipeline_depth_hint": "Deep",
+      "guidance_credibility_hint": "High",
+      "cash_conversion_hint": "Strong",
+      "mgmt_sentiment": "Bullish",
+      "watch_next": "20%+ consumption momentum + CY27 mall completions.",
+      "data_completeness_pct": 27.3,
+      "alpha_bucket": "Emerging",
+      "retail_consumption_inr_cr": 4685,
+      "retail_rental_inr_cr": 605,
+      "note": "Annuity/retail model — not ranked on residential pre-sales"
+    }
+  ],
+  "rankings": {
+    "by_presales": [
+      "OBEROIRLTY",
+      "GODREJPROP",
+      "PRESTIGE",
+      "LODHA",
+      "DLF",
+      "SOBHA",
+      "BRIGADE"
+    ],
+    "by_presales_yoy": [
+      "OBEROIRLTY",
+      "PRESTIGE",
+      "SOBHA",
+      "LODHA",
+      "GODREJPROP",
+      "BRIGADE",
+      "DLF"
+    ],
+    "by_collections_presales_x": [
+      "SOBHA",
+      "BRIGADE",
+      "PRESTIGE",
+      "DLF",
+      "LODHA",
+      "GODREJPROP"
+    ],
+    "by_lowest_net_debt_equity": [
+      "SOBHA",
+      "OBEROIRLTY",
+      "LODHA",
+      "BRIGADE",
+      "GODREJPROP"
+    ],
+    "composite_operating_momentum": [
+      "PRESTIGE",
+      "LODHA",
+      "OBEROIRLTY",
+      "SOBHA",
+      "DLF",
+      "GODREJPROP",
+      "BRIGADE"
+    ],
+    "composite_balance_sheet_safety": [
+      "DLF",
+      "SOBHA",
+      "LODHA",
+      "PHOENIXLTD",
+      "OBEROIRLTY",
+      "BRIGADE",
+      "GODREJPROP"
+    ],
+    "composite_alpha_score": [
+      "PRESTIGE",
+      "LODHA",
+      "PHOENIXLTD",
+      "SOBHA",
+      "DLF",
+      "OBEROIRLTY",
+      "GODREJPROP",
+      "BRIGADE"
+    ]
+  },
+  "alpha_book": {
+    "leaders": [
+      {
+        "symbol": "PRESTIGE",
+        "thesis_one_liner": "Broad-based +20% pre-sales, 0.73x collections, deep ~₹46.6k cr pipeline + CPP hospitality capital.",
+        "confidence": "High",
+        "kill_criteria": [
+          "RERA delays vs ₹36k FY guidance",
+          "Collections conversion breaks"
+        ]
+      },
+      {
+        "symbol": "LODHA",
+        "thesis_one_liner": "Scale + 0.21x leverage + H2 launches + DC land monetization.",
+        "confidence": "High",
+        "kill_criteria": [
+          "Miss ₹6–7k quarterly pre-sales",
+          "DC land deal slips"
+        ]
+      }
+    ],
+    "emerging_alpha": [
+      {
+        "symbol": "PHOENIXLTD",
+        "thesis_one_liner": "Retail annuity compounder: +25% consumption, 1.2x ND/EBITDA, 14–15%+ rental growth guide.",
+        "confidence": "High",
+        "kill_criteria": [
+          "Consumption <10% YoY",
+          "CY27 project delays"
+        ]
+      },
+      {
+        "symbol": "SOBHA",
+        "thesis_one_liner": "Record H1 bookings + net cash; margin recovery is the swing factor.",
+        "confidence": "Medium",
+        "kill_criteria": [
+          "H2 EBITDA stays ~11%",
+          "Land spend re-levers BS"
+        ]
+      }
+    ],
+    "avoid_or_value_traps": [
+      {
+        "symbol": "GODREJPROP",
+        "thesis_one_liner": "Sustenance strength vs −6% pre-sales, sharp PAT drop, 0.41x leverage.",
+        "confidence": "Medium",
+        "kill_criteria": [
+          "Miss ₹22.5–25k H2 bookings",
+          "ND/E rises further"
+        ]
+      },
+      {
+        "symbol": "BRIGADE",
+        "thesis_one_liner": "Back-ended ₹9k FY target after soft H1; launch slip risk.",
+        "confidence": "Medium",
+        "kill_criteria": [
+          "Launches slip to FY28",
+          "Collections keep falling YoY"
+        ]
+      }
+    ]
+  },
+  "sector_read_through": {
+    "demand_tone": "Mixed",
+    "collections_tone": "Strong",
+    "leverage_tone": "Comfortable",
+    "common_watch_items": [
+      "RERA/approval timelines for H2 launches",
+      "Pre-sales vs near-term P&L recognition gap",
+      "Construction cost and net-debt trends"
+    ],
+    "best_relative_setups": [
+      "PRESTIGE",
+      "LODHA",
+      "PHOENIXLTD"
+    ],
+    "weakest_relative_setups": [
+      "GODREJPROP",
+      "BRIGADE"
+    ]
+  },
+  "open_questions": [
+    "Prestige exact ND/E and completed-unsold across peers still thin.",
+    "Oberoi leverage conflict: 0.14x vs net-cash notes."
+  ]
+}

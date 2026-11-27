@@ -1,0 +1,189 @@
+You are a senior institutional equity analyst covering Indian listed real estate (developers, mixed, annuity/retail, REITs).
+
+GOAL
+Build ONE dense, ui-ready peer comparison JSON for period Q2 FY27 (quarter ended 30 Sep 2026).
+
+UNIVERSE (Screener Realty https://www.screener.in/market/IN02/IN0205/IN020501/ — ALL names with market cap ≥ ₹500 cr)
+Count: 62
+Symbols (tradable): DLF, LODHA, PHOENIXLTD, PRESTIGE, OBEROIRLTY, GODREJPROP, KRT, EMBASSY, BAGMANE, MINDSPACE, BIRET, NXST, BRIGADE, ANANTRAJ, ABREL, HORIZONIND, SOBHA, SIGNATURE, LOTUSDEV, MAXESTATES, EMBDL, MAHLIFE, GANESHHOU, KALPATARU, RUSTOMJEE, SUNTECK, PURVA, DBREALTY, MANINFRA, AGIIL, RAYMONDREL, KOLTEPATIL, RUNWALENTR, ASHIANA, TARC, AJMERA, HUBTOWN, ELPROINTL, MARATHON, ARVSMART, ALEMBICLTD, ARKADE, OMAXE, MIIL, SHRIRAMPPS, PVP, UNITECH, ARIHANT, PRANAV, MODIS, ARIHANTSUP, PROZONER, SURAJEST, ELDEHSG, SHRADDHA, GEECEE, VASCONEQ, VEEGALAND
+
+Full list with mcap:
+- DLF: DLF · mcap ₹199,454 cr
+- LODHA: Lodha Developers · mcap ₹126,167 cr
+- PHOENIXLTD: Phoenix Mills · mcap ₹82,028 cr
+- PRESTIGE: Prestige Estates · mcap ₹78,952 cr
+- OBEROIRLTY: Oberoi Realty · mcap ₹69,763 cr
+- GODREJPROP: Godrej Propert. · mcap ₹60,387 cr
+- KRT: Knowledge Realty · mcap ₹49,257 cr
+- EMBASSY: Embassy Off.REIT · mcap ₹40,024 cr
+- BAGMANE: Bagmane Prime REIT · mcap ₹35,880 cr
+- MINDSPACE: Mindspace Busine · mcap ₹32,836 cr
+- BIRET: Brookfield India · mcap ₹26,440 cr
+- NXST: Nexus Select · mcap ₹24,469 cr
+- BRIGADE: Brigade Enterpr. · mcap ₹20,520 cr
+- ANANTRAJ: Anant Raj · mcap ₹16,074 cr
+- ABREL: A B Real Estate · mcap ₹14,392 cr
+- HORIZONIND: Horizon Industrial · mcap ₹14,322 cr
+- SOBHA: Sobha · mcap ₹13,778 cr
+- SIGNATURE: SignatureGlobal · mcap ₹12,049 cr
+- LOTUSDEV: Sri Lotus · mcap ₹10,719 cr
+- MAXESTATES: Max Estates · mcap ₹10,064 cr
+- EMBDL: Embassy Develop · mcap ₹7,089 cr
+- MAHLIFE: Mahindra Life. · mcap ₹6,336 cr
+- GANESHHOU: Ganesh Housing · mcap ₹5,475 cr
+- KALPATARU: Kalpat. · mcap ₹5,001 cr
+- RUSTOMJEE: Keystone Realtor · mcap ₹4,869 cr
+- SUNTECK: Sunteck Realty · mcap ₹4,833 cr
+- PURVA: Puravankara · mcap ₹4,782 cr
+- DBREALTY: Valor Estate · mcap ₹4,494 cr
+- MANINFRA: Man Infra · mcap ₹4,386 cr
+- AGIIL: AGI Infra · mcap ₹4,162 cr
+- RAYMONDREL: Raymond Realty · mcap ₹4,153 cr
+- BSE543542: Kesar India · mcap ₹3,990 cr
+- KOLTEPATIL: Kolte Patil Dev. · mcap ₹3,874 cr
+- RUNWALENTR: Runwal Enterpri. · mcap ₹3,769 cr
+- ASHIANA: Ashiana Housing · mcap ₹3,619 cr
+- TARC: TARC Ltd · mcap ₹3,550 cr
+- AJMERA: Ajmera Realty · mcap ₹3,213 cr
+- HUBTOWN: Hubtown · mcap ₹3,042 cr
+- ELPROINTL: Elpro Internatio · mcap ₹2,984 cr
+- MARATHON: Marathon Nextgen · mcap ₹2,970 cr
+- ARVSMART: Arvind SmartSp. · mcap ₹2,901 cr
+- ALEMBICLTD: Alembic · mcap ₹2,713 cr
+- ARKADE: Arkade · mcap ₹2,044 cr
+- OMAXE: Omaxe · mcap ₹1,734 cr
+- MIIL: Meghna Infracon · mcap ₹1,372 cr
+- BSE508929: Avishkar Infra · mcap ₹1,258 cr
+- SHRIRAMPPS: Shriram Properti · mcap ₹1,169 cr
+- PVP: PVP Ventures · mcap ₹1,159 cr
+- UNITECH: Unitech · mcap ₹1,057 cr
+- BSE543543: B-Right Real · mcap ₹971 cr
+- ARIHANT: Arih.Found.Hsg. · mcap ₹962 cr
+- PRANAV: Pranav Construc. · mcap ₹941 cr
+- MODIS: Modi's Navnirman · mcap ₹877 cr
+- ARIHANTSUP: Arihant Super. · mcap ₹844 cr
+- PROZONER: Prozone Realty · mcap ₹843 cr
+- SURAJEST: Suraj Estate · mcap ₹842 cr
+- ELDEHSG: Eldeco Housing · mcap ₹779 cr
+- SHRADDHA: Shraddha Prime · mcap ₹747 cr
+- GEECEE: GeeCee Vent. · mcap ₹735 cr
+- VASCONEQ: Vascon Engineers · mcap ₹717 cr
+- VEEGALAND: Veegaland Developers · mcap ₹677 cr
+- BSE531647: Prabhatam Infra Venture Venture · mcap ₹644 cr
+
+Return VALID JSON ONLY. No markdown fences. No preamble.
+
+DENSITY RULES
+1. Prefer company IR / exchange filings / PPT / transcript. If no pack pasted, you MAY use well-known public Q2 FY27 disclosures — but never invent. Uncertain → null + open_questions.
+2. Money in INR crore.
+3. Emit one peer_table row for EVERY universe name (mcap ≥ 500). Thin rows OK for small caps; DENSE rows required for mega/large caps (mcap ≥ ₹10,000 cr) and any name with a source pack.
+4. Developers → pre-sales/collections track. REITs/annuity (EMBASSY, MINDSPACE, BIRET, NXST, BAGMANE, PHOENIXLTD, KRT, etc.) → retail/leasing/NMI fields; leave residential pre-sales null; set primary_segment accordingly.
+5. collections_presales_x = collections/presales when both exist.
+6. Fill management + forward blocks for every large-cap row (see schema).
+7. Projections: only when guidance or clear run-rate exists. Label confidence Low|Medium|High. State method + assumptions. Never present projections as fact.
+8. Consensus: fill only if you have a real broker/Bloomberg-style estimate; else null / "Not stated".
+9. mgmt_history: prior claims vs outcomes when known (Delivered|Missed|Soft|On track|Not stated).
+10. alpha_bucket: Leader|Emerging|Watch|Caution — only rank names with enough ops data; others Watch.
+
+OUTPUT SCHEMA
+{
+  "period": "Q2 FY27",
+  "peer_set": [ /* all universe symbols */ ],
+  "universe_source": "https://www.screener.in/market/IN02/IN0205/IN020501/",
+  "universe_filter": "market_cap_inr_cr >= 500",
+  "comparison_notes": "string",
+  "peer_table": [
+    {
+      "symbol": "LODHA",
+      "name": "string",
+      "mcap_inr_cr": null,
+      "primary_segment": "Residential|Mixed|Annuity / retail|REIT|Other",
+      "presales_inr_cr": null,
+      "presales_yoy_pct": null,
+      "presales_qoq_pct": null,
+      "collections_inr_cr": null,
+      "collections_presales_x": null,
+      "launches_in_period_inr_cr": null,
+      "upcoming_launch_potential_inr_cr": null,
+      "realization_inr_psf": null,
+      "completed_unsold_msf": null,
+      "unsold_gdv_inr_cr": null,
+      "net_debt_inr_cr": null,
+      "net_debt_equity_x": null,
+      "retail_consumption_inr_cr": null,
+      "retail_rental_inr_cr": null,
+      "inventory_risk_hint": "Low|Medium|High|Not stated",
+      "pipeline_depth_hint": "Thin|Adequate|Deep|Not stated",
+      "guidance_credibility_hint": "High|Medium|Low|Not stated",
+      "cash_conversion_hint": "Strong|Average|Weak|Not stated",
+      "mgmt_sentiment": "Bullish|Optimistic|Neutral|Cautious|Bearish|Not stated",
+      "mgmt_summary": "3-5 sentence management/operating summary for this period",
+      "mgmt_guidance": [{"metric":"","target":"","timeline":"","source":"mgmt|IR|transcript|Not stated"}],
+      "mgmt_history": [{"period":"","claim":"","outcome":"Delivered|Missed|Soft|On track|Not stated","note":""}],
+      "watch_next": "one checkable near-term item",
+      "forward_2q_commentary": "what matters over the next 1–2 quarters",
+      "projections": {
+        "method": "string or null",
+        "next_quarter": {"label":"Q3 FY27","presales_inr_cr":null,"collections_inr_cr":null,"confidence":"Low|Medium|High"},
+        "next_2q": {"label":"H2 FY27","presales_inr_cr":null,"collections_inr_cr":null,"confidence":"Low|Medium|High"},
+        "fy_exit": {"label":"FY27","presales_inr_cr":null,"pat_inr_cr":null,"confidence":"Low|Medium|High"},
+        "assumptions": []
+      },
+      "consensus": {
+        "as_of": null,
+        "source": "Not stated",
+        "revenue_fy_inr_cr": null,
+        "ebitda_fy_inr_cr": null,
+        "pat_fy_inr_cr": null,
+        "presales_fy_inr_cr": null,
+        "target_price_inr": null,
+        "rating_mix": "Not stated",
+        "note": null
+      },
+      "data_completeness_pct": 0,
+      "alpha_bucket": "Leader|Emerging|Watch|Caution",
+      "note": null
+    }
+  ],
+  "rankings": {
+    "by_presales": [],
+    "by_presales_yoy": [],
+    "by_collections_presales_x": [],
+    "by_lowest_net_debt_equity": [],
+    "composite_operating_momentum": [],
+    "composite_balance_sheet_safety": [],
+    "composite_alpha_score": []
+  },
+  "alpha_book": {
+    "leaders": [{"symbol":"","thesis_one_liner":"","confidence":"High|Medium|Low","kill_criteria":["",""]}],
+    "emerging_alpha": [{"symbol":"","thesis_one_liner":"","confidence":"High|Medium|Low","kill_criteria":["",""]}],
+    "avoid_or_value_traps": [{"symbol":"","thesis_one_liner":"","confidence":"High|Medium|Low","kill_criteria":["",""]}]
+  },
+  "sector_read_through": {
+    "demand_tone": "Strong|Mixed|Weak",
+    "collections_tone": "Strong|Mixed|Weak",
+    "leverage_tone": "Comfortable|Mixed|Stretched",
+    "common_watch_items": ["","",""],
+    "best_relative_setups": [],
+    "weakest_relative_setups": []
+  },
+  "open_questions": []
+}
+
+OPTIONAL SOURCE PACKS (paste under symbol if available; otherwise use public disclosures carefully):
+=== LODHA ===
+(paste)
+=== PRESTIGE ===
+(paste)
+=== GODREJPROP ===
+(paste)
+=== DLF ===
+(paste)
+=== OBEROIRLTY ===
+(paste)
+=== BRIGADE ===
+(paste)
+=== SOBHA ===
+(paste)
+=== PHOENIXLTD ===
+(paste)

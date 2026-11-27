@@ -1,0 +1,198 @@
+You are a senior institutional equity analyst covering Indian listed real estate and the Nifty Realty index.
+
+GOAL
+Build ONE ui-ready JSON for a Realty "Demand pulse" dashboard and sparkline charts.
+Focus period: Q2 FY27 (quarter ended 30 Sep 2026).
+Also fill a quarterly HISTORY so we can plot the last 6–8 quarters of sector demand.
+
+Return VALID JSON ONLY. No markdown fences. No preamble.
+
+INDEX UNIVERSE (Nifty Realty 10 — use these for weighted scores unless a name has no data)
+DLF, LODHA, PHOENIXLTD, PRESTIGE, GODREJPROP, OBEROIRLTY, BRIGADE, ANANTRAJ, ABREL, SOBHA
+
+SECTOR CONTEXT
+Screener Realty industry (mcap ≥ ₹500 cr) is the broader universe, but pulse scores are computed on the 10 index names above.
+PHOENIXLTD is annuity/retail — do NOT force residential pre-sales; use consumption/rental for that name.
+ABREL = Aditya Birla Real Estate.
+
+RULES
+1. Never invent numbers. Missing → null. Prefer exchange filings / IR decks / official registration portals.
+2. Money in INR crore.
+3. For launch spikes (e.g. one-off +500% YoY), still report the true YoY but ALSO report winsorized_yoy (clamp each name’s YoY to [-50, +80] before mcap-weighted average).
+4. Booking score = mcap-weighted average of winsorized_presales_yoy_pct across index names that disclose pre-sales YoY.
+5. Collections score = prefer mcap-weighted collections_yoy_pct if available; else mcap-weighted collections_presales_x and set metric accordingly.
+6. Breadth = % of index names with presales_yoy_pct > 0 (among names with non-null YoY).
+7. Property registrations: if you can cite city IGR / registration dashboards (Mumbai, Pune, Bengaluru, NCR, Hyderabad, Chennai), fill units or YoY; else null + note what source to scrape.
+8. History: emit 8 quarters ending at Q2 FY27. For each quarter fill aggregate pre-sales and collections of the index developers that disclosed that quarter. Null is OK for older quarters if not known — do not fabricate.
+
+OUTPUT SCHEMA
+{
+  "as_of": "YYYY-MM-DD",
+  "period": "Q2 FY27",
+  "nifty_realty": {
+    "ret_1m_pct": null,
+    "ret_3m_pct": null,
+    "ret_1y_pct": null,
+    "note": "price returns if known; else null"
+  },
+  "index_set": ["DLF","LODHA","PHOENIXLTD","PRESTIGE","GODREJPROP","OBEROIRLTY","BRIGADE","ANANTRAJ","ABREL","SOBHA"],
+  "per_name_latest": [
+    {
+      "symbol": "LODHA",
+      "mcap_inr_cr": null,
+      "presales_inr_cr": null,
+      "presales_yoy_pct": null,
+      "presales_yoy_winsorized_pct": null,
+      "collections_inr_cr": null,
+      "collections_yoy_pct": null,
+      "collections_presales_x": null,
+      "launches_in_period_inr_cr": null,
+      "source": "IR / filing / Not stated"
+    }
+  ],
+  "booking_score": {
+    "metric": "mcap_weighted_presales_yoy_winsorized_pct",
+    "value": null,
+    "sample_n": 0,
+    "agg_presales_inr_cr": null
+  },
+  "collections_score": {
+    "metric": "mcap_weighted_collections_yoy_pct | mcap_weighted_collections_presales_x",
+    "value": null,
+    "sample_n": 0,
+    "agg_collections_inr_cr": null,
+    "note": ""
+  },
+  "breadth": {
+    "pct_positive_presales_yoy": null,
+    "positive_n": 0,
+    "sample_n": 0
+  },
+  "tones": {
+    "demand_tone": "Strong|Mixed|Weak",
+    "collections_tone": "Strong|Mixed|Weak",
+    "leverage_tone": "Comfortable|Mixed|Stretched",
+    "why": "1-2 sentences grounded in the numbers"
+  },
+  "property_registrations": {
+    "period": "Q2 FY27 or latest available month",
+    "national_or_major_cities_yoy_pct": null,
+    "cities": [
+      {"city": "Mumbai", "registrations_units": null, "yoy_pct": null, "source": null},
+      {"city": "Pune", "registrations_units": null, "yoy_pct": null, "source": null},
+      {"city": "Bengaluru", "registrations_units": null, "yoy_pct": null, "source": null},
+      {"city": "NCR", "registrations_units": null, "yoy_pct": null, "source": null},
+      {"city": "Hyderabad", "registrations_units": null, "yoy_pct": null, "source": null},
+      {"city": "Chennai", "registrations_units": null, "yoy_pct": null, "source": null}
+    ],
+    "pulse_note": "How registrations confirm or contradict developer pre-sales"
+  },
+  "history": [
+    {
+      "period": "Q3 FY25",
+      "presales_agg_inr_cr": null,
+      "collections_agg_inr_cr": null,
+      "booking_score_winsorized": null,
+      "breadth_pct_positive_yoy": null,
+      "registrations_yoy_pct": null,
+      "names_included": []
+    },
+    {
+      "period": "Q4 FY25",
+      "presales_agg_inr_cr": null,
+      "collections_agg_inr_cr": null,
+      "booking_score_winsorized": null,
+      "breadth_pct_positive_yoy": null,
+      "registrations_yoy_pct": null,
+      "names_included": []
+    },
+    {
+      "period": "Q1 FY26",
+      "presales_agg_inr_cr": null,
+      "collections_agg_inr_cr": null,
+      "booking_score_winsorized": null,
+      "breadth_pct_positive_yoy": null,
+      "registrations_yoy_pct": null,
+      "names_included": []
+    },
+    {
+      "period": "Q2 FY26",
+      "presales_agg_inr_cr": null,
+      "collections_agg_inr_cr": null,
+      "booking_score_winsorized": null,
+      "breadth_pct_positive_yoy": null,
+      "registrations_yoy_pct": null,
+      "names_included": []
+    },
+    {
+      "period": "Q3 FY26",
+      "presales_agg_inr_cr": null,
+      "collections_agg_inr_cr": null,
+      "booking_score_winsorized": null,
+      "breadth_pct_positive_yoy": null,
+      "registrations_yoy_pct": null,
+      "names_included": []
+    },
+    {
+      "period": "Q4 FY26",
+      "presales_agg_inr_cr": null,
+      "collections_agg_inr_cr": null,
+      "booking_score_winsorized": null,
+      "breadth_pct_positive_yoy": null,
+      "registrations_yoy_pct": null,
+      "names_included": []
+    },
+    {
+      "period": "Q1 FY27",
+      "presales_agg_inr_cr": null,
+      "collections_agg_inr_cr": null,
+      "booking_score_winsorized": null,
+      "breadth_pct_positive_yoy": null,
+      "registrations_yoy_pct": null,
+      "names_included": []
+    },
+    {
+      "period": "Q2 FY27",
+      "presales_agg_inr_cr": null,
+      "collections_agg_inr_cr": null,
+      "booking_score_winsorized": null,
+      "breadth_pct_positive_yoy": null,
+      "registrations_yoy_pct": null,
+      "names_included": []
+    }
+  ],
+  "sparkline_ready": {
+    "presales_series": [{"period":"Q3 FY25","value":null}],
+    "collections_series": [{"period":"Q3 FY25","value":null}],
+    "registrations_series": [{"period":"Q3 FY25","value":null}]
+  },
+  "open_questions": ["list gaps and exact IR pages / registration portals needed"]
+}
+
+Fill per_name_latest for all 10 index symbols.
+Fill history + sparkline_ready with the same quarterly values (sparkline series mirrors history).
+If source packs are pasted below, use them first; otherwise use well-known public Q2 FY27 disclosures carefully and null what you cannot support.
+
+OPTIONAL SOURCE PACKS
+=== DLF ===
+(paste)
+=== LODHA ===
+(paste)
+=== PRESTIGE ===
+(paste)
+=== GODREJPROP ===
+(paste)
+=== OBEROIRLTY ===
+(paste)
+=== BRIGADE ===
+(paste)
+=== SOBHA ===
+(paste)
+=== PHOENIXLTD ===
+(paste)
+=== ANANTRAJ ===
+(paste)
+=== ABREL ===
+(paste)
+=== REGISTRATIONS (city portals / news) ===
+(paste)

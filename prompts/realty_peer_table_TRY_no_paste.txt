@@ -1,0 +1,83 @@
+You are a senior institutional equity analyst covering Indian listed real estate.
+
+GOAL
+Build ONE ui-ready peer comparison JSON for Q2 FY27 (quarter ended 30 Sep 2026) for:
+LODHA, OBEROIRLTY, PRESTIGE, GODREJPROP, DLF, BRIGADE, SOBHA, PHOENIXLTD
+
+Return VALID JSON ONLY. No markdown fences. No preamble.
+
+MODE: NO SOURCE PASTE
+Use publicly reported company disclosures for Q2 FY27 / H1 FY27 (exchange filings, investor presentations, earnings releases). Prefer company-reported numbers over broker estimates.
+If you are not confident a figure is from that period, set it null and list it in open_questions — do not guess.
+
+RULES
+1. All money in INR crore.
+2. Developers → fill pre-sales / collections / net debt when known.
+3. PHOENIXLTD → annuity/retail only: retail_consumption_inr_cr, retail_rental_inr_cr; leave residential pre-sales/collections null; primary_segment "Annuity / retail".
+4. collections_presales_x = collections / pre-sales when both exist (2 decimals).
+5. data_completeness_pct = honest % of core numeric fields filled.
+6. alpha_bucket: Leader | Emerging | Watch | Caution
+7. For every non-null number, add a short evidence note in that row's "note" or in open_questions as "SYMBOL.field = value (source: …)".
+8. Emit exactly 8 peer_table rows.
+
+OUTPUT SCHEMA:
+{
+  "period": "Q2 FY27",
+  "peer_set": ["LODHA","OBEROIRLTY","PRESTIGE","GODREJPROP","DLF","BRIGADE","SOBHA","PHOENIXLTD"],
+  "comparison_notes": "string",
+  "peer_table": [
+    {
+      "symbol": "LODHA",
+      "name": "string",
+      "primary_segment": "Residential|Mixed|Annuity / retail",
+      "presales_inr_cr": null,
+      "presales_yoy_pct": null,
+      "presales_qoq_pct": null,
+      "collections_inr_cr": null,
+      "collections_presales_x": null,
+      "launches_in_period_inr_cr": null,
+      "upcoming_launch_potential_inr_cr": null,
+      "realization_inr_psf": null,
+      "completed_unsold_msf": null,
+      "unsold_gdv_inr_cr": null,
+      "net_debt_inr_cr": null,
+      "net_debt_equity_x": null,
+      "inventory_risk_hint": "Low|Medium|High|Not stated",
+      "pipeline_depth_hint": "Thin|Adequate|Deep|Not stated",
+      "guidance_credibility_hint": "High|Medium|Low|Not stated",
+      "cash_conversion_hint": "Strong|Average|Weak|Not stated",
+      "mgmt_sentiment": "Bullish|Optimistic|Neutral|Cautious|Bearish|Not stated",
+      "watch_next": "string",
+      "data_completeness_pct": 0,
+      "alpha_bucket": "Leader|Emerging|Watch|Caution",
+      "retail_consumption_inr_cr": null,
+      "retail_rental_inr_cr": null,
+      "note": "brief source evidence for key numbers"
+    }
+  ],
+  "rankings": {
+    "by_presales": [],
+    "by_presales_yoy": [],
+    "by_collections_presales_x": [],
+    "by_lowest_net_debt_equity": [],
+    "composite_operating_momentum": [],
+    "composite_balance_sheet_safety": [],
+    "composite_alpha_score": []
+  },
+  "alpha_book": {
+    "leaders": [{"symbol":"","thesis_one_liner":"","confidence":"High|Medium|Low","kill_criteria":["",""]}],
+    "emerging_alpha": [{"symbol":"","thesis_one_liner":"","confidence":"High|Medium|Low","kill_criteria":["",""]}],
+    "avoid_or_value_traps": [{"symbol":"","thesis_one_liner":"","confidence":"High|Medium|Low","kill_criteria":["",""]}]
+  },
+  "sector_read_through": {
+    "demand_tone": "Strong|Mixed|Weak",
+    "collections_tone": "Strong|Mixed|Weak",
+    "leverage_tone": "Comfortable|Mixed|Stretched",
+    "common_watch_items": ["","",""],
+    "best_relative_setups": [],
+    "weakest_relative_setups": []
+  },
+  "open_questions": ["uncertain or missing fields with what to verify"]
+}
+
+Fill peer_table + rankings + alpha_book from public Q2 FY27 disclosures now.
