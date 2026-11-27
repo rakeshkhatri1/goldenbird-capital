@@ -4,6 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Goldenbird Capital</title>
+    <script>
+        // GitHub project Pages needs a repo base path; without it, relative
+        // config.js / data/* resolve to github.io root and Realty looks empty.
+        (function () {
+            var segs = location.pathname.split('/').filter(Boolean);
+            var base = '/';
+            if (/\.github\.io$/i.test(location.hostname) && segs.length) {
+                base = '/' + segs[0] + '/';
+            } else if (segs.length && /\.html?$/i.test(segs[segs.length - 1])) {
+                base = '/' + segs.slice(0, -1).join('/') + (segs.length > 1 ? '/' : '');
+                if (base === '//') base = '/';
+            }
+            window.__GB_APP_BASE__ = base;
+            var el = document.createElement('base');
+            el.href = base;
+            document.head.prepend(el);
+        })();
+    </script>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231c1917'/%3E%3Cpath fill='%23eab308' d='M7.5 20.5c2.2-1.1 4.1-3.2 5.2-5.4 1.4 2.1 3.6 3.7 6.1 4.3-2.8.6-5.1 2.4-6.4 4.8-1.8-1.2-3.5-2.4-4.9-3.7z'/%3E%3Cpath fill='%23facc15' d='M22.8 8.2c-1.6 3.4-4.2 5.8-7.4 7.1 2.5-3.6 4.3-7.4 5.1-11.1 1.3 1.1 2.3 2.4 2.3 4z'/%3E%3Cpath fill='%23ca8a04' d='M15.2 15.4c1.9-.4 3.5-1.5 4.5-3.1.2 2.1-.4 4.2-1.8 5.8-1.1-.8-2-1.7-2.7-2.7z'/%3E%3Ccircle cx='23.2' cy='9.2' r='1.1' fill='%23783650'/%3E%3C/svg%3E">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -4707,30 +4725,44 @@
             }
         }
 
-        async function loadRealtyPeerCompare() {
-            const paths = ['data/realty_peer_compare.json', 'examples/realty_peer_compare.sample.json'];
-            realtyPeerData = null;
-            for (const path of paths) {
+        async function fetchJsonCandidates(candidates, label) {
+            const errors = [];
+            for (const path of candidates) {
+                const url = cacheBustUrl(path);
                 try {
-                    const res = await fetch(cacheBustUrl(path));
-                    if (!res.ok) continue;
-                    realtyPeerData = await res.json();
-                    writeToConsole(`Realty peer pack loaded (${path}).`, 'success');
-                    break;
-                } catch (_) { /* try next */ }
+                    const res = await fetch(url);
+                    if (!res.ok) {
+                        errors.push(`${path} → HTTP ${res.status}`);
+                        continue;
+                    }
+                    const json = await res.json();
+                    writeToConsole(`${label} loaded (${path}).`, 'success');
+                    return json;
+                } catch (err) {
+                    errors.push(`${path} → ${err && err.message ? err.message : 'fetch failed'}`);
+                }
             }
-            try {
-                const u = await fetch(cacheBustUrl('data/realty_universe_screener.json'));
-                if (u.ok) realtyUniverse = await u.json();
-            } catch (_) { realtyUniverse = null; }
-            try {
-                const a = await fetch(cacheBustUrl('data/realty_vs_nifty_realty_1y.json'));
-                if (a.ok) realtyReturns1y = await a.json();
-            } catch (_) { realtyReturns1y = null; }
-            try {
-                const b = await fetch(cacheBustUrl('data/realty_vs_nifty_realty_5y.json'));
-                if (b.ok) realtyReturns5y = await b.json();
-            } catch (_) { realtyReturns5y = null; }
+            if (errors.length) {
+                writeToConsole(`${label} failed: ${errors.join(' | ')}`, 'error');
+            }
+            return null;
+        }
+
+        async function loadRealtyPeerCompare() {
+            // Prefer public R2 (no credentials in browser), then Pages-bundled data/, then sample.
+            realtyPeerData = await fetchJsonCandidates([
+                'data/realty_peer_compare.json',
+                'examples/realty_peer_compare.sample.json',
+            ], 'Realty peer pack');
+            realtyUniverse = await fetchJsonCandidates([
+                'data/realty_universe_screener.json',
+            ], 'Realty universe');
+            realtyReturns1y = await fetchJsonCandidates([
+                'data/realty_vs_nifty_realty_1y.json',
+            ], 'Realty 1Y returns');
+            realtyReturns5y = await fetchJsonCandidates([
+                'data/realty_vs_nifty_realty_5y.json',
+            ], 'Realty 5Y returns');
         }
 
         function fmtRealtyNum(v, digits = 0) {
@@ -6319,6 +6351,7 @@
             evaluatePipelineAlerts();
             renderAlertsBell();
             renderHomeTab();
+            if (activeTab === 'realty-tab') renderRealtyTab();
             lucide.createIcons();
         }
     </script>
