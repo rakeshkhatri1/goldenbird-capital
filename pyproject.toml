@@ -32,6 +32,7 @@ market = [
 
 [project.scripts]
 gb-r2-upload-ui = "goldenbird.cli.upload_ui:main"
+gb-r2-enable-public = "goldenbird.cli.enable_r2_public:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
