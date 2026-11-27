@@ -1,0 +1,486 @@
+{
+  "as_of_note": "Yahoo Finance 1Y price return vs ^CNXREALTY (Nifty Realty proxy)",
+  "nifty_realty_1y_pct": 3.35,
+  "outperformers": [
+    {
+      "symbol": "ARIHANT",
+      "name": "Arih.Found.Hsg.",
+      "mcap_inr_cr": 962.38,
+      "ret_1y": 2167.09,
+      "in_nifty_realty": false,
+      "alpha_pp": 2163.74
+    },
+    {
+      "symbol": "ELPROINTL",
+      "name": "Elpro Internatio",
+      "mcap_inr_cr": 2983.85,
+      "ret_1y": 67.12,
+      "in_nifty_realty": false,
+      "alpha_pp": 63.77
+    },
+    {
+      "symbol": "OMAXE",
+      "name": "Omaxe",
+      "mcap_inr_cr": 1734.26,
+      "ret_1y": 37.4,
+      "in_nifty_realty": false,
+      "alpha_pp": 34.05
+    },
+    {
+      "symbol": "LOTUSDEV",
+      "name": "Sri Lotus",
+      "mcap_inr_cr": 10719.23,
+      "ret_1y": 33.68,
+      "in_nifty_realty": false,
+      "alpha_pp": 30.33
+    },
+    {
+      "symbol": "PHOENIXLTD",
+      "name": "Phoenix Mills",
+      "mcap_inr_cr": 82028.47,
+      "ret_1y": 30.47,
+      "in_nifty_realty": true,
+      "alpha_pp": 27.12
+    },
+    {
+      "symbol": "MAXESTATES",
+      "name": "Max Estates",
+      "mcap_inr_cr": 10064.28,
+      "ret_1y": 28.57,
+      "in_nifty_realty": false,
+      "alpha_pp": 25.22
+    },
+    {
+      "symbol": "MODIS",
+      "name": "Modi's Navnirman",
+      "mcap_inr_cr": 876.52,
+      "ret_1y": 20.68,
+      "in_nifty_realty": false,
+      "alpha_pp": 17.33
+    },
+    {
+      "symbol": "PVP",
+      "name": "PVP Ventures",
+      "mcap_inr_cr": 1159.26,
+      "ret_1y": 20.17,
+      "in_nifty_realty": false,
+      "alpha_pp": 16.82
+    },
+    {
+      "symbol": "RAYMONDREL",
+      "name": "Raymond Realty",
+      "mcap_inr_cr": 4153.36,
+      "ret_1y": 18.0,
+      "in_nifty_realty": false,
+      "alpha_pp": 14.65
+    },
+    {
+      "symbol": "ASHIANA",
+      "name": "Ashiana Housing",
+      "mcap_inr_cr": 3618.87,
+      "ret_1y": 15.7,
+      "in_nifty_realty": false,
+      "alpha_pp": 12.35
+    },
+    {
+      "symbol": "OBEROIRLTY",
+      "name": "Oberoi Realty",
+      "mcap_inr_cr": 69762.6,
+      "ret_1y": 12.37,
+      "in_nifty_realty": true,
+      "alpha_pp": 9.02
+    },
+    {
+      "symbol": "AGIIL",
+      "name": "AGI Infra",
+      "mcap_inr_cr": 4162.23,
+      "ret_1y": 11.49,
+      "in_nifty_realty": false,
+      "alpha_pp": 8.14
+    },
+    {
+      "symbol": "KOLTEPATIL",
+      "name": "Kolte Patil Dev.",
+      "mcap_inr_cr": 3874.47,
+      "ret_1y": 9.8,
+      "in_nifty_realty": false,
+      "alpha_pp": 6.45
+    },
+    {
+      "symbol": "DLF",
+      "name": "DLF",
+      "mcap_inr_cr": 199453.91,
+      "ret_1y": 8.79,
+      "in_nifty_realty": true,
+      "alpha_pp": 5.44
+    },
+    {
+      "symbol": "MINDSPACE",
+      "name": "Mindspace Busine",
+      "mcap_inr_cr": 32836.4,
+      "ret_1y": 8.68,
+      "in_nifty_realty": false,
+      "alpha_pp": 5.33
+    },
+    {
+      "symbol": "ARVSMART",
+      "name": "Arvind SmartSp.",
+      "mcap_inr_cr": 2901.06,
+      "ret_1y": 7.28,
+      "in_nifty_realty": false,
+      "alpha_pp": 3.93
+    },
+    {
+      "symbol": "ALEMBICLTD",
+      "name": "Alembic",
+      "mcap_inr_cr": 2712.68,
+      "ret_1y": 4.56,
+      "in_nifty_realty": false,
+      "alpha_pp": 1.21
+    },
+    {
+      "symbol": "SHRADDHA",
+      "name": "Shraddha Prime",
+      "mcap_inr_cr": 746.78,
+      "ret_1y": 4.29,
+      "in_nifty_realty": false,
+      "alpha_pp": 0.94
+    }
+  ],
+  "underperformers": [
+    {
+      "symbol": "LODHA",
+      "name": "Lodha Developers",
+      "mcap_inr_cr": 126166.75,
+      "ret_1y": 3.3,
+      "in_nifty_realty": true,
+      "alpha_pp": -0.05
+    },
+    {
+      "symbol": "ELDEHSG",
+      "name": "Eldeco Housing",
+      "mcap_inr_cr": 778.77,
+      "ret_1y": 2.09,
+      "in_nifty_realty": false,
+      "alpha_pp": -1.26
+    },
+    {
+      "symbol": "BAGMANE",
+      "name": "Bagmane Prime REIT",
+      "mcap_inr_cr": 35880.2,
+      "ret_1y": 1.88,
+      "in_nifty_realty": false,
+      "alpha_pp": -1.47
+    },
+    {
+      "symbol": "PRESTIGE",
+      "name": "Prestige Estates",
+      "mcap_inr_cr": 78951.57,
+      "ret_1y": 1.04,
+      "in_nifty_realty": true,
+      "alpha_pp": -2.31
+    },
+    {
+      "symbol": "PROZONER",
+      "name": "Prozone Realty",
+      "mcap_inr_cr": 843.31,
+      "ret_1y": -0.76,
+      "in_nifty_realty": false,
+      "alpha_pp": -4.11
+    },
+    {
+      "symbol": "NXST",
+      "name": "Nexus Select",
+      "mcap_inr_cr": 24468.78,
+      "ret_1y": -1.42,
+      "in_nifty_realty": false,
+      "alpha_pp": -4.77
+    },
+    {
+      "symbol": "EMBASSY",
+      "name": "Embassy Off.REIT",
+      "mcap_inr_cr": 40024.37,
+      "ret_1y": -2.17,
+      "in_nifty_realty": false,
+      "alpha_pp": -5.52
+    },
+    {
+      "symbol": "GEECEE",
+      "name": "GeeCee Vent.",
+      "mcap_inr_cr": 735.14,
+      "ret_1y": -2.52,
+      "in_nifty_realty": false,
+      "alpha_pp": -5.87
+    },
+    {
+      "symbol": "BIRET",
+      "name": "Brookfield India",
+      "mcap_inr_cr": 26440.11,
+      "ret_1y": -2.96,
+      "in_nifty_realty": false,
+      "alpha_pp": -6.31
+    },
+    {
+      "symbol": "VEEGALAND",
+      "name": "Veegaland Developers",
+      "mcap_inr_cr": 676.84,
+      "ret_1y": -4.33,
+      "in_nifty_realty": false,
+      "alpha_pp": -7.68
+    },
+    {
+      "symbol": "KRT",
+      "name": "Knowledge Realty",
+      "mcap_inr_cr": 49257.31,
+      "ret_1y": -5.02,
+      "in_nifty_realty": false,
+      "alpha_pp": -8.37
+    },
+    {
+      "symbol": "GODREJPROP",
+      "name": "Godrej Propert.",
+      "mcap_inr_cr": 60387.41,
+      "ret_1y": -9.19,
+      "in_nifty_realty": true,
+      "alpha_pp": -12.54
+    },
+    {
+      "symbol": "MIIL",
+      "name": "Meghna Infracon",
+      "mcap_inr_cr": 1372.3,
+      "ret_1y": -10.33,
+      "in_nifty_realty": false,
+      "alpha_pp": -13.68
+    },
+    {
+      "symbol": "TARC",
+      "name": "TARC Ltd",
+      "mcap_inr_cr": 3549.82,
+      "ret_1y": -12.45,
+      "in_nifty_realty": false,
+      "alpha_pp": -15.8
+    },
+    {
+      "symbol": "BRIGADE",
+      "name": "Brigade Enterpr.",
+      "mcap_inr_cr": 20520.04,
+      "ret_1y": -13.75,
+      "in_nifty_realty": true,
+      "alpha_pp": -17.1
+    },
+    {
+      "symbol": "HORIZONIND",
+      "name": "Horizon Industrial",
+      "mcap_inr_cr": 14322.06,
+      "ret_1y": -15.99,
+      "in_nifty_realty": false,
+      "alpha_pp": -19.34
+    },
+    {
+      "symbol": "MANINFRA",
+      "name": "Man Infra",
+      "mcap_inr_cr": 4386.09,
+      "ret_1y": -16.99,
+      "in_nifty_realty": false,
+      "alpha_pp": -20.34
+    },
+    {
+      "symbol": "GANESHHOU",
+      "name": "Ganesh Housing",
+      "mcap_inr_cr": 5475.08,
+      "ret_1y": -17.18,
+      "in_nifty_realty": false,
+      "alpha_pp": -20.53
+    },
+    {
+      "symbol": "PURVA",
+      "name": "Puravankara",
+      "mcap_inr_cr": 4781.65,
+      "ret_1y": -18.73,
+      "in_nifty_realty": false,
+      "alpha_pp": -22.08
+    },
+    {
+      "symbol": "AJMERA",
+      "name": "Ajmera Realty",
+      "mcap_inr_cr": 3213.11,
+      "ret_1y": -20.4,
+      "in_nifty_realty": false,
+      "alpha_pp": -23.75
+    },
+    {
+      "symbol": "SOBHA",
+      "name": "Sobha",
+      "mcap_inr_cr": 13777.8,
+      "ret_1y": -20.87,
+      "in_nifty_realty": true,
+      "alpha_pp": -24.22
+    },
+    {
+      "symbol": "MARATHON",
+      "name": "Marathon Nextgen",
+      "mcap_inr_cr": 2970.01,
+      "ret_1y": -22.22,
+      "in_nifty_realty": false,
+      "alpha_pp": -25.57
+    },
+    {
+      "symbol": "SHRIRAMPPS",
+      "name": "Shriram Properti",
+      "mcap_inr_cr": 1169.34,
+      "ret_1y": -24.33,
+      "in_nifty_realty": false,
+      "alpha_pp": -27.68
+    },
+    {
+      "symbol": "SIGNATURE",
+      "name": "SignatureGlobal",
+      "mcap_inr_cr": 12049.07,
+      "ret_1y": -25.22,
+      "in_nifty_realty": false,
+      "alpha_pp": -28.57
+    },
+    {
+      "symbol": "SUNTECK",
+      "name": "Sunteck Realty",
+      "mcap_inr_cr": 4832.74,
+      "ret_1y": -26.02,
+      "in_nifty_realty": false,
+      "alpha_pp": -29.37
+    },
+    {
+      "symbol": "ANANTRAJ",
+      "name": "Anant Raj",
+      "mcap_inr_cr": 16073.96,
+      "ret_1y": -26.57,
+      "in_nifty_realty": true,
+      "alpha_pp": -29.92
+    },
+    {
+      "symbol": "MAHLIFE",
+      "name": "Mahindra Life.",
+      "mcap_inr_cr": 6335.63,
+      "ret_1y": -27.41,
+      "in_nifty_realty": false,
+      "alpha_pp": -30.76
+    },
+    {
+      "symbol": "ABREL",
+      "name": "A B Real Estate",
+      "mcap_inr_cr": 14392.0,
+      "ret_1y": -27.65,
+      "in_nifty_realty": true,
+      "alpha_pp": -31.0
+    },
+    {
+      "symbol": "RUSTOMJEE",
+      "name": "Keystone Realtor",
+      "mcap_inr_cr": 4868.64,
+      "ret_1y": -31.59,
+      "in_nifty_realty": false,
+      "alpha_pp": -34.94
+    },
+    {
+      "symbol": "KALPATARU",
+      "name": "Kalpat.",
+      "mcap_inr_cr": 5000.77,
+      "ret_1y": -33.06,
+      "in_nifty_realty": false,
+      "alpha_pp": -36.41
+    },
+    {
+      "symbol": "ARKADE",
+      "name": "Arkade",
+      "mcap_inr_cr": 2044.34,
+      "ret_1y": -33.37,
+      "in_nifty_realty": false,
+      "alpha_pp": -36.72
+    },
+    {
+      "symbol": "SURAJEST",
+      "name": "Suraj Estate",
+      "mcap_inr_cr": 842.34,
+      "ret_1y": -34.65,
+      "in_nifty_realty": false,
+      "alpha_pp": -38.0
+    },
+    {
+      "symbol": "EMBDL",
+      "name": "Embassy Develop",
+      "mcap_inr_cr": 7088.68,
+      "ret_1y": -36.81,
+      "in_nifty_realty": false,
+      "alpha_pp": -40.16
+    },
+    {
+      "symbol": "PRANAV",
+      "name": "Pranav Construc.",
+      "mcap_inr_cr": 940.97,
+      "ret_1y": -37.05,
+      "in_nifty_realty": false,
+      "alpha_pp": -40.4
+    },
+    {
+      "symbol": "VASCONEQ",
+      "name": "Vascon Engineers",
+      "mcap_inr_cr": 716.88,
+      "ret_1y": -37.09,
+      "in_nifty_realty": false,
+      "alpha_pp": -40.44
+    },
+    {
+      "symbol": "HUBTOWN",
+      "name": "Hubtown",
+      "mcap_inr_cr": 3042.41,
+      "ret_1y": -38.81,
+      "in_nifty_realty": false,
+      "alpha_pp": -42.16
+    },
+    {
+      "symbol": "DBREALTY",
+      "name": "Valor Estate",
+      "mcap_inr_cr": 4494.39,
+      "ret_1y": -39.14,
+      "in_nifty_realty": false,
+      "alpha_pp": -42.49
+    },
+    {
+      "symbol": "UNITECH",
+      "name": "Unitech",
+      "mcap_inr_cr": 1056.99,
+      "ret_1y": -40.16,
+      "in_nifty_realty": false,
+      "alpha_pp": -43.51
+    },
+    {
+      "symbol": "ARIHANTSUP",
+      "name": "Arihant Super.",
+      "mcap_inr_cr": 843.78,
+      "ret_1y": -43.48,
+      "in_nifty_realty": false,
+      "alpha_pp": -46.83
+    }
+  ],
+  "missing": [
+    {
+      "symbol": "543542",
+      "name": "Kesar India"
+    },
+    {
+      "symbol": "RUNWALENTR",
+      "name": "Runwal Enterpri."
+    },
+    {
+      "symbol": "508929",
+      "name": "Avishkar Infra"
+    },
+    {
+      "symbol": "543543",
+      "name": "B-Right Real"
+    },
+    {
+      "symbol": "531647",
+      "name": "Prabhatam Infra Venture Venture"
+    }
+  ]
+}

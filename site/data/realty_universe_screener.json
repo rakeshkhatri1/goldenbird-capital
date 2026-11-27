@@ -1,0 +1,440 @@
+{
+  "source": "https://www.screener.in/market/IN02/IN0205/IN020501/",
+  "filter": "market_cap_inr_cr >= 500",
+  "count": 62,
+  "count_tradable_symbols": 58,
+  "peer_set": [
+    "DLF",
+    "LODHA",
+    "PHOENIXLTD",
+    "PRESTIGE",
+    "OBEROIRLTY",
+    "GODREJPROP",
+    "KRT",
+    "EMBASSY",
+    "BAGMANE",
+    "MINDSPACE",
+    "BIRET",
+    "NXST",
+    "BRIGADE",
+    "ANANTRAJ",
+    "ABREL",
+    "HORIZONIND",
+    "SOBHA",
+    "SIGNATURE",
+    "LOTUSDEV",
+    "MAXESTATES",
+    "EMBDL",
+    "MAHLIFE",
+    "GANESHHOU",
+    "KALPATARU",
+    "RUSTOMJEE",
+    "SUNTECK",
+    "PURVA",
+    "DBREALTY",
+    "MANINFRA",
+    "AGIIL",
+    "RAYMONDREL",
+    "KOLTEPATIL",
+    "RUNWALENTR",
+    "ASHIANA",
+    "TARC",
+    "AJMERA",
+    "HUBTOWN",
+    "ELPROINTL",
+    "MARATHON",
+    "ARVSMART",
+    "ALEMBICLTD",
+    "ARKADE",
+    "OMAXE",
+    "MIIL",
+    "SHRIRAMPPS",
+    "PVP",
+    "UNITECH",
+    "ARIHANT",
+    "PRANAV",
+    "MODIS",
+    "ARIHANTSUP",
+    "PROZONER",
+    "SURAJEST",
+    "ELDEHSG",
+    "SHRADDHA",
+    "GEECEE",
+    "VASCONEQ",
+    "VEEGALAND"
+  ],
+  "universe": [
+    {
+      "symbol": "DLF",
+      "screener_slug": "DLF",
+      "name": "DLF",
+      "mcap_inr_cr": 199453.91
+    },
+    {
+      "symbol": "LODHA",
+      "screener_slug": "LODHA",
+      "name": "Lodha Developers",
+      "mcap_inr_cr": 126166.75
+    },
+    {
+      "symbol": "PHOENIXLTD",
+      "screener_slug": "PHOENIXLTD",
+      "name": "Phoenix Mills",
+      "mcap_inr_cr": 82028.47
+    },
+    {
+      "symbol": "PRESTIGE",
+      "screener_slug": "PRESTIGE",
+      "name": "Prestige Estates",
+      "mcap_inr_cr": 78951.57
+    },
+    {
+      "symbol": "OBEROIRLTY",
+      "screener_slug": "OBEROIRLTY",
+      "name": "Oberoi Realty",
+      "mcap_inr_cr": 69762.6
+    },
+    {
+      "symbol": "GODREJPROP",
+      "screener_slug": "GODREJPROP",
+      "name": "Godrej Propert.",
+      "mcap_inr_cr": 60387.41
+    },
+    {
+      "symbol": "KRT",
+      "screener_slug": "KRT",
+      "name": "Knowledge Realty",
+      "mcap_inr_cr": 49257.31
+    },
+    {
+      "symbol": "EMBASSY",
+      "screener_slug": "EMBASSY",
+      "name": "Embassy Off.REIT",
+      "mcap_inr_cr": 40024.37
+    },
+    {
+      "symbol": "BAGMANE",
+      "screener_slug": "BAGMANE",
+      "name": "Bagmane Prime REIT",
+      "mcap_inr_cr": 35880.2
+    },
+    {
+      "symbol": "MINDSPACE",
+      "screener_slug": "MINDSPACE",
+      "name": "Mindspace Busine",
+      "mcap_inr_cr": 32836.4
+    },
+    {
+      "symbol": "BIRET",
+      "screener_slug": "BIRET",
+      "name": "Brookfield India",
+      "mcap_inr_cr": 26440.11
+    },
+    {
+      "symbol": "NXST",
+      "screener_slug": "NXST",
+      "name": "Nexus Select",
+      "mcap_inr_cr": 24468.78
+    },
+    {
+      "symbol": "BRIGADE",
+      "screener_slug": "BRIGADE",
+      "name": "Brigade Enterpr.",
+      "mcap_inr_cr": 20520.04
+    },
+    {
+      "symbol": "ANANTRAJ",
+      "screener_slug": "ANANTRAJ",
+      "name": "Anant Raj",
+      "mcap_inr_cr": 16073.96
+    },
+    {
+      "symbol": "ABREL",
+      "screener_slug": "ABREL",
+      "name": "A B Real Estate",
+      "mcap_inr_cr": 14392.0
+    },
+    {
+      "symbol": "HORIZONIND",
+      "screener_slug": "HORIZONIND",
+      "name": "Horizon Industrial",
+      "mcap_inr_cr": 14322.06
+    },
+    {
+      "symbol": "SOBHA",
+      "screener_slug": "SOBHA",
+      "name": "Sobha",
+      "mcap_inr_cr": 13777.8
+    },
+    {
+      "symbol": "SIGNATURE",
+      "screener_slug": "SIGNATURE",
+      "name": "SignatureGlobal",
+      "mcap_inr_cr": 12049.07
+    },
+    {
+      "symbol": "LOTUSDEV",
+      "screener_slug": "LOTUSDEV",
+      "name": "Sri Lotus",
+      "mcap_inr_cr": 10719.23
+    },
+    {
+      "symbol": "MAXESTATES",
+      "screener_slug": "MAXESTATES",
+      "name": "Max Estates",
+      "mcap_inr_cr": 10064.28
+    },
+    {
+      "symbol": "EMBDL",
+      "screener_slug": "EMBDL",
+      "name": "Embassy Develop",
+      "mcap_inr_cr": 7088.68
+    },
+    {
+      "symbol": "MAHLIFE",
+      "screener_slug": "MAHLIFE",
+      "name": "Mahindra Life.",
+      "mcap_inr_cr": 6335.63
+    },
+    {
+      "symbol": "GANESHHOU",
+      "screener_slug": "GANESHHOU",
+      "name": "Ganesh Housing",
+      "mcap_inr_cr": 5475.08
+    },
+    {
+      "symbol": "KALPATARU",
+      "screener_slug": "KALPATARU",
+      "name": "Kalpat.",
+      "mcap_inr_cr": 5000.77
+    },
+    {
+      "symbol": "RUSTOMJEE",
+      "screener_slug": "RUSTOMJEE",
+      "name": "Keystone Realtor",
+      "mcap_inr_cr": 4868.64
+    },
+    {
+      "symbol": "SUNTECK",
+      "screener_slug": "SUNTECK",
+      "name": "Sunteck Realty",
+      "mcap_inr_cr": 4832.74
+    },
+    {
+      "symbol": "PURVA",
+      "screener_slug": "PURVA",
+      "name": "Puravankara",
+      "mcap_inr_cr": 4781.65
+    },
+    {
+      "symbol": "DBREALTY",
+      "screener_slug": "DBREALTY",
+      "name": "Valor Estate",
+      "mcap_inr_cr": 4494.39
+    },
+    {
+      "symbol": "MANINFRA",
+      "screener_slug": "MANINFRA",
+      "name": "Man Infra",
+      "mcap_inr_cr": 4386.09
+    },
+    {
+      "symbol": "AGIIL",
+      "screener_slug": "AGIIL",
+      "name": "AGI Infra",
+      "mcap_inr_cr": 4162.23
+    },
+    {
+      "symbol": "RAYMONDREL",
+      "screener_slug": "RAYMONDREL",
+      "name": "Raymond Realty",
+      "mcap_inr_cr": 4153.36
+    },
+    {
+      "symbol": "543542",
+      "screener_slug": "543542",
+      "name": "Kesar India",
+      "mcap_inr_cr": 3990.33
+    },
+    {
+      "symbol": "KOLTEPATIL",
+      "screener_slug": "KOLTEPATIL",
+      "name": "Kolte Patil Dev.",
+      "mcap_inr_cr": 3874.47
+    },
+    {
+      "symbol": "RUNWALENTR",
+      "screener_slug": "RUNWALENTR",
+      "name": "Runwal Enterpri.",
+      "mcap_inr_cr": 3769.35
+    },
+    {
+      "symbol": "ASHIANA",
+      "screener_slug": "ASHIANA",
+      "name": "Ashiana Housing",
+      "mcap_inr_cr": 3618.87
+    },
+    {
+      "symbol": "TARC",
+      "screener_slug": "TARC",
+      "name": "TARC Ltd",
+      "mcap_inr_cr": 3549.82
+    },
+    {
+      "symbol": "AJMERA",
+      "screener_slug": "AJMERA",
+      "name": "Ajmera Realty",
+      "mcap_inr_cr": 3213.11
+    },
+    {
+      "symbol": "HUBTOWN",
+      "screener_slug": "HUBTOWN",
+      "name": "Hubtown",
+      "mcap_inr_cr": 3042.41
+    },
+    {
+      "symbol": "ELPROINTL",
+      "screener_slug": "ELPROINTL",
+      "name": "Elpro Internatio",
+      "mcap_inr_cr": 2983.85
+    },
+    {
+      "symbol": "MARATHON",
+      "screener_slug": "MARATHON",
+      "name": "Marathon Nextgen",
+      "mcap_inr_cr": 2970.01
+    },
+    {
+      "symbol": "ARVSMART",
+      "screener_slug": "ARVSMART",
+      "name": "Arvind SmartSp.",
+      "mcap_inr_cr": 2901.06
+    },
+    {
+      "symbol": "ALEMBICLTD",
+      "screener_slug": "ALEMBICLTD",
+      "name": "Alembic",
+      "mcap_inr_cr": 2712.68
+    },
+    {
+      "symbol": "ARKADE",
+      "screener_slug": "ARKADE",
+      "name": "Arkade",
+      "mcap_inr_cr": 2044.34
+    },
+    {
+      "symbol": "OMAXE",
+      "screener_slug": "OMAXE",
+      "name": "Omaxe",
+      "mcap_inr_cr": 1734.26
+    },
+    {
+      "symbol": "MIIL",
+      "screener_slug": "MIIL",
+      "name": "Meghna Infracon",
+      "mcap_inr_cr": 1372.3
+    },
+    {
+      "symbol": "508929",
+      "screener_slug": "508929",
+      "name": "Avishkar Infra",
+      "mcap_inr_cr": 1258.06
+    },
+    {
+      "symbol": "SHRIRAMPPS",
+      "screener_slug": "SHRIRAMPPS",
+      "name": "Shriram Properti",
+      "mcap_inr_cr": 1169.34
+    },
+    {
+      "symbol": "PVP",
+      "screener_slug": "PVP",
+      "name": "PVP Ventures",
+      "mcap_inr_cr": 1159.26
+    },
+    {
+      "symbol": "UNITECH",
+      "screener_slug": "UNITECH",
+      "name": "Unitech",
+      "mcap_inr_cr": 1056.99
+    },
+    {
+      "symbol": "543543",
+      "screener_slug": "543543",
+      "name": "B-Right Real",
+      "mcap_inr_cr": 971.13
+    },
+    {
+      "symbol": "ARIHANT",
+      "screener_slug": "ARIHANT",
+      "name": "Arih.Found.Hsg.",
+      "mcap_inr_cr": 962.38
+    },
+    {
+      "symbol": "PRANAV",
+      "screener_slug": "PRANAV",
+      "name": "Pranav Construc.",
+      "mcap_inr_cr": 940.97
+    },
+    {
+      "symbol": "MODIS",
+      "screener_slug": "MODIS",
+      "name": "Modi's Navnirman",
+      "mcap_inr_cr": 876.52
+    },
+    {
+      "symbol": "ARIHANTSUP",
+      "screener_slug": "ARIHANTSUP",
+      "name": "Arihant Super.",
+      "mcap_inr_cr": 843.78
+    },
+    {
+      "symbol": "PROZONER",
+      "screener_slug": "PROZONER",
+      "name": "Prozone Realty",
+      "mcap_inr_cr": 843.31
+    },
+    {
+      "symbol": "SURAJEST",
+      "screener_slug": "SURAJEST",
+      "name": "Suraj Estate",
+      "mcap_inr_cr": 842.34
+    },
+    {
+      "symbol": "ELDEHSG",
+      "screener_slug": "ELDEHSG",
+      "name": "Eldeco Housing",
+      "mcap_inr_cr": 778.77
+    },
+    {
+      "symbol": "SHRADDHA",
+      "screener_slug": "SHRADDHA",
+      "name": "Shraddha Prime",
+      "mcap_inr_cr": 746.78
+    },
+    {
+      "symbol": "GEECEE",
+      "screener_slug": "GEECEE",
+      "name": "GeeCee Vent.",
+      "mcap_inr_cr": 735.14
+    },
+    {
+      "symbol": "VASCONEQ",
+      "screener_slug": "VASCONEQ",
+      "name": "Vascon Engineers",
+      "mcap_inr_cr": 716.88
+    },
+    {
+      "symbol": "VEEGALAND",
+      "screener_slug": "VEEGALAND",
+      "name": "Veegaland Developers",
+      "mcap_inr_cr": 676.84
+    },
+    {
+      "symbol": "531647",
+      "screener_slug": "531647",
+      "name": "Prabhatam Infra Venture Venture",
+      "mcap_inr_cr": 644.23
+    }
+  ]
+}

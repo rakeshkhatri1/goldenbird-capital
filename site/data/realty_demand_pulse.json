@@ -1,0 +1,93 @@
+{
+  "as_of": "2026-11-27",
+  "period": "Q2 FY27",
+  "nifty_realty": {
+    "symbol": "^CNXREALTY",
+    "ret_1m_pct": 19.29,
+    "ret_3m_pct": 3.5,
+    "ret_1y_pct": 3.35
+  },
+  "index_set": [
+    "ABREL",
+    "ANANTRAJ",
+    "BRIGADE",
+    "DLF",
+    "GODREJPROP",
+    "LODHA",
+    "OBEROIRLTY",
+    "PHOENIXLTD",
+    "PRESTIGE",
+    "SOBHA"
+  ],
+  "booking_score": {
+    "metric": "mcap_weighted_presales_yoy_pct",
+    "value": 74.28,
+    "sample_n": 7,
+    "agg_presales_inr_cr": 37252.7
+  },
+  "collections_score": {
+    "metric": "mcap_weighted_collections_presales_x",
+    "value": 0.66,
+    "sample_n": 7,
+    "agg_collections_inr_cr": 22836.1,
+    "note": "YoY collections often missing; Coll/PS used as cash-conversion score until YoY series is filled"
+  },
+  "breadth": {
+    "pct_positive_presales_yoy": 57.1,
+    "positive_n": 4,
+    "sample_n": 7
+  },
+  "tones": {
+    "demand_tone": "Mixed",
+    "collections_tone": "Strong",
+    "leverage_tone": "Comfortable"
+  },
+  "property_registrations": {
+    "metric": "city_registration_index_or_units",
+    "value": null,
+    "cities": [
+      "Mumbai",
+      "Pune",
+      "Bengaluru",
+      "NCR",
+      "Hyderabad",
+      "Chennai"
+    ],
+    "note": "Wire MHADA/IGR / city registration dashboards later \u2014 stored for automation"
+  },
+  "history": [
+    {
+      "period": "Q3 FY26",
+      "presales_agg_inr_cr": null,
+      "collections_agg_inr_cr": null,
+      "registrations_index": null,
+      "note": "placeholder \u2014 fill when available"
+    },
+    {
+      "period": "Q4 FY26",
+      "presales_agg_inr_cr": null,
+      "collections_agg_inr_cr": null,
+      "registrations_index": null,
+      "note": "placeholder"
+    },
+    {
+      "period": "Q1 FY27",
+      "presales_agg_inr_cr": null,
+      "collections_agg_inr_cr": null,
+      "registrations_index": null,
+      "note": "placeholder"
+    },
+    {
+      "period": "Q2 FY27",
+      "presales_agg_inr_cr": 37252.7,
+      "collections_agg_inr_cr": 22836.1,
+      "registrations_index": null,
+      "note": "sum of dense index names with disclosed pre-sales/collections"
+    }
+  ],
+  "common_watch_items": [
+    "RERA/approval timelines for H2 launches",
+    "Pre-sales vs near-term P&L recognition gap",
+    "Construction cost and net-debt trends"
+  ]
+}

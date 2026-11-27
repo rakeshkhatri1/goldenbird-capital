@@ -20,8 +20,9 @@ __pycache__/
 .pytest_cache/
 
 # Local market / research datasets (keep out of git for now)
-data/
-nse_market_data.json
+# Anchor to repo root so site/data/ (Pages demo packs) can be committed.
+/data/
+/nse_market_data.json
 *.log
 
 # Node / frontend build

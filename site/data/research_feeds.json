@@ -1,0 +1,135 @@
+{
+  "version": 1,
+  "updated_at": "2026-03-26T00:00:00+00:00",
+  "note": "Curated capital-firm research hubs + recurring report series. Edit this file to add/remove links you track.",
+  "firms": [
+    {
+      "id": "motilal",
+      "name": "Motilal Oswal",
+      "tagline": "Equity research & strategy notes",
+      "hub_url": "https://www.motilaloswal.com/research",
+      "color": "#c7921a"
+    },
+    {
+      "id": "icici",
+      "name": "ICICI Securities",
+      "tagline": "Daily / weekly market & stock notes",
+      "hub_url": "https://www.icicidirect.com/research",
+      "color": "#f37321"
+    },
+    {
+      "id": "hdfc",
+      "name": "HDFC Securities",
+      "tagline": "Market outlook & stock ideas",
+      "hub_url": "https://www.hdfcsec.com/research",
+      "color": "#004c8f"
+    },
+    {
+      "id": "kotak",
+      "name": "Kotak Securities",
+      "tagline": "Research portal & market reports",
+      "hub_url": "https://www.kotaksecurities.com/research/",
+      "color": "#ed1c24"
+    },
+    {
+      "id": "axis",
+      "name": "Axis Direct",
+      "tagline": "Research desk & recommendations",
+      "hub_url": "https://simplehai.axisdirect.in/research",
+      "color": "#97144d"
+    },
+    {
+      "id": "emkay",
+      "name": "Emkay Global",
+      "tagline": "Institutional equity research",
+      "hub_url": "https://www.emkayglobal.com/research",
+      "color": "#0f766e"
+    },
+    {
+      "id": "jm",
+      "name": "JM Financial",
+      "tagline": "Institutional research",
+      "hub_url": "https://www.jmfl.com/research",
+      "color": "#1a1410"
+    },
+    {
+      "id": "nirmal",
+      "name": "Nirmal Bang",
+      "tagline": "Daily research & technical notes",
+      "hub_url": "https://www.nirmalbang.com/research.aspx",
+      "color": "#5c4f44"
+    }
+  ],
+  "reports": [
+    {
+      "id": "nse-fii-dii",
+      "firm": "NSE India",
+      "firm_id": "nse",
+      "title": "FII / DII daily activity (official)",
+      "kind": "Data",
+      "cadence": "Daily",
+      "url": "https://www.nseindia.com/reports/fii-dii",
+      "notes": "Source page for institutional cash-market flows"
+    },
+    {
+      "id": "mosl-strategy",
+      "firm": "Motilal Oswal",
+      "firm_id": "motilal",
+      "title": "Strategy / market outlook desk",
+      "kind": "Strategy",
+      "cadence": "Ongoing",
+      "url": "https://www.motilaloswal.com/research",
+      "notes": "Track weekly strategy & sector notes from MOSL"
+    },
+    {
+      "id": "icici-research",
+      "firm": "ICICI Securities",
+      "firm_id": "icici",
+      "title": "ICICI Direct research hub",
+      "kind": "Equity",
+      "cadence": "Daily",
+      "url": "https://www.icicidirect.com/research",
+      "notes": "Company notes, morning briefs, thematic reports"
+    },
+    {
+      "id": "hdfc-research",
+      "firm": "HDFC Securities",
+      "firm_id": "hdfc",
+      "title": "HDFC Securities research",
+      "kind": "Equity",
+      "cadence": "Ongoing",
+      "url": "https://www.hdfcsec.com/research",
+      "notes": "Stock ideas and market commentary"
+    },
+    {
+      "id": "kotak-research",
+      "firm": "Kotak Securities",
+      "firm_id": "kotak",
+      "title": "Kotak research portal",
+      "kind": "Equity",
+      "cadence": "Ongoing",
+      "url": "https://www.kotaksecurities.com/research/",
+      "notes": "Broker research & recommendations"
+    },
+    {
+      "id": "bse-ann",
+      "firm": "BSE India",
+      "firm_id": "bse",
+      "title": "BSE corporate announcements",
+      "kind": "Filings",
+      "cadence": "Intraday",
+      "url": "https://www.bseindia.com/corporates/ann.html",
+      "notes": "Exchange filings that often accompany research catalysts"
+    },
+    {
+      "id": "sebi-research",
+      "firm": "SEBI",
+      "firm_id": "sebi",
+      "title": "SEBI investor education / circulars",
+      "kind": "Regulatory",
+      "cadence": "As published",
+      "url": "https://www.sebi.gov.in/",
+      "notes": "Regulatory backdrop for market structure"
+    }
+  ]
+}
