@@ -1833,19 +1833,22 @@
          * Local: data/foo.json
          * Hosted with DATA_BASE_URL / GOLDENBIRD_CONFIG.dataBaseUrl → {base}/foo.json
          */
+        // One bust token per page load — avoids refetch thrash / flicker from Date.now() on every call.
+        const DATA_CACHE_BUST = String(Date.now());
+
         function resolveDataPath(path) {
             const base = String(GB_CONFIG.dataBaseUrl || '').replace(/\/$/, '');
             if (!base) return path;
             if (/^https?:\/\//i.test(path)) return path;
-            if (path.startsWith('examples/')) return path;
-            const trimmed = path.replace(/^data\//, '');
-            return `${base}/${trimmed}`;
+            // Only remap curated data/* packs to R2. Leave root files (e.g. nse_market_data.json) local.
+            if (!path.startsWith('data/')) return path;
+            return `${base}/${path.slice('data/'.length)}`;
         }
 
         function cacheBustUrl(path) {
             const resolved = resolveDataPath(path);
             const sep = resolved.includes('?') ? '&' : '?';
-            return `${resolved}${sep}v=${Date.now()}`;
+            return `${resolved}${sep}v=${DATA_CACHE_BUST}`;
         }
 
         function valGapChipClass(gap) {
@@ -4801,10 +4804,11 @@
         }
 
         async function loadRealtyPeerCompare() {
+            const hadData = !!(realtyPeerData?.peer_table?.length || realtyUniverse?.universe?.length);
             realtyLoadState = 'loading';
-            if (activeTab === 'realty-tab') renderRealtyTab();
+            // Only show the loading row when we have nothing to display yet (no empty↔data flicker).
+            if (!hadData && activeTab === 'realty-tab') renderRealtyTab();
             // Prefer public R2 (no credentials in browser), then Pages-bundled data/, then sample.
-            // Fetch packs in parallel so the tab fills once instead of stuttering.
             const [peer, universe, ret1y, ret5y] = await Promise.all([
                 fetchJsonCandidates([
                     'data/realty_peer_compare.json',
@@ -4820,6 +4824,7 @@
                     'data/realty_vs_nifty_realty_5y.json',
                 ], 'Realty 5Y returns'),
             ]);
+            // Commit packs atomically, then paint once.
             realtyPeerData = peer;
             realtyUniverse = universe;
             realtyReturns1y = ret1y;
@@ -6374,15 +6379,18 @@
 
             lucide.createIcons();
 
+            // Do not hijack Realty / Pipeline / etc. when market JSON finishes loading.
             if (activeTab === 'sector-tab') {
                 renderSectorTab();
             } else if (activeTab === 'sector-compare-tab') {
                 renderSectorCompareTab();
             } else if (activeTab === 'business-updates-tab') {
                 renderBusinessUpdatesTab();
-            } else if (data.length > 0) {
-                selectedSymbol = pickDefaultSymbol(data);
-                if (selectedSymbol) selectAsset(selectedSymbol);
+            } else if (activeTab === 'screener-tab' || activeTab === 'home-tab') {
+                if (data.length > 0) {
+                    selectedSymbol = pickDefaultSymbol(data);
+                    if (selectedSymbol) selectAsset(selectedSymbol);
+                }
             }
         }
 
@@ -6431,8 +6439,12 @@
             });
             evaluatePipelineAlerts();
             renderAlertsBell();
-            // Re-render the restored tab with fully loaded data.
-            switchTab(activeTab, { persist: false });
+            // Soft refresh only — full switchTab here caused Realty to flash empty↔data.
+            if (activeTab === 'realty-tab') renderRealtyTab();
+            else if (activeTab === 'home-tab') renderHomeTab();
+            else if (activeTab === 'pipeline-tab') renderPipelineTab();
+            else if (activeTab === 'concall-tab') renderConcallScansTab();
+            else if (activeTab === 'deep-research-tab') renderDeepResearchTab();
             lucide.createIcons();
         }
     </script>
